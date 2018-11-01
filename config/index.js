@@ -9,12 +9,30 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/fs': 'http://10.27.213.66:9091',
+
+      /**
+       * 适用于本地开发
+       *
+       * 1.不经过Gateway(default)
+       *  target: 服务地址
+       *  pathRewrite: 保留
+       *
+       * 2.经过Gateway
+       *  target: Gateway地址
+       *  pathRewrite: 去除
+       */
+      '/api': {
+        target: 'http://localhost:8750',
+        pathRewrite: path => path.replace(path.match(/^\/api\/[a-zA-Z0-9]*/g), '')
+      }
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
     port: 9528, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-    autoOpenBrowser: true,
+    autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: false,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
