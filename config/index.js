@@ -10,6 +10,13 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
+      '/jwt': {
+        target: 'https://easy-mock.com/mock/5950a2419adc231f356a6636/vue-admin',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/jwt': ''
+        }
+      },
       '/fs': 'http://10.27.213.66:9091',
 
       /**
@@ -32,7 +39,7 @@ module.exports = {
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
     port: 9528, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-    autoOpenBrowser: false,
+    autoOpenBrowser: true,
     errorOverlay: true,
     notifyOnErrors: false,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
