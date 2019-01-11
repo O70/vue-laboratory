@@ -31,15 +31,15 @@ module.exports = {
        *  pathRewrite: 去除
        */
       '/api': {
-        target: 'http://localhost:8750',
-        pathRewrite: path => path.replace(path.match(/^\/api\/[a-zA-Z0-9]*/g), '')
+        target: 'http://localhost:8083',
+        // pathRewrite: path => path.replace(path.match(/^\/api\/[a-zA-Z0-9]*/g), '')
       }
     },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
     port: 9528, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-    autoOpenBrowser: true,
+    autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: false,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
