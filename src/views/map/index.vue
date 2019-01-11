@@ -11,8 +11,16 @@ export default {
       three: {
         scene: new THREE.Scene(),
         camera: new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000),
-        renderer: new THREE.WebGLRenderer()
-      }
+        renderer: new THREE.WebGLRenderer(),
+        raycaster: new THREE.Raycaster(),
+        mouse: new THREE.Vector2()
+      },
+      colors: {
+        background: 0x414a58,
+        region: 0x343c47,
+        selected: 0x2b333b
+      },
+      INTERSECTED: null
     }
   },
   mounted() {
@@ -22,14 +30,14 @@ export default {
     initThree() {
       this.three.camera.position.set(0, 0, 400)
 
-      this.three.renderer.setClearColor(new THREE.Color(0x414a58))
+      this.three.renderer.setClearColor(new THREE.Color(this.colors.background))
       this.three.renderer.setSize(window.innerWidth, window.innerHeight)
 
       const axes = new THREE.AxesHelper(80)
       this.three.scene.add(axes)
 
       const shapeGeometry = new THREE.ShapeGeometry(this.getShape())
-      const shapeMaterial = new THREE.MeshBasicMaterial({ color: 0x343c47 })
+      const shapeMaterial = new THREE.MeshBasicMaterial({ color: this.colors.region })
       const shape = new THREE.Mesh(shapeGeometry, shapeMaterial)
       this.three.scene.add(shape)
 
@@ -38,39 +46,8 @@ export default {
       this.three.renderer.render(this.three.scene, this.three.camera)
 
       window.addEventListener('resize', this.onWindowResize, false)
+      document.addEventListener('mousemove', this.onDocumentMouseMove, false)
     },
-    /*
-    drawShape() {
-      var x = -140, y = 60;
-      var shape = new THREE.Shape();
-      shape.moveTo(x, y);
-      shape.lineTo(x, y);
-      // shape.lineTo(x + 10, y);
-      // shape.lineTo(x + 10, y + 10);
-      // shape.lineTo(x, y + 10);
-      shape.lineTo(-120, 60)
-      shape.lineTo(-120, 50)
-      shape.lineTo(-75, 50)
-      shape.lineTo(-75, 25)
-      shape.lineTo(-85, 25)
-      shape.lineTo(-85, -35)
-      shape.lineTo(-80, -35)
-      shape.lineTo(-80, -75)
-      shape.lineTo(-85, -75)
-      shape.lineTo(-85, -135)
-      shape.lineTo(-75, -135)
-      shape.lineTo(-75, -160)
-      shape.lineTo(-120, -160)
-      shape.lineTo(-130, -160)
-      shape.lineTo(-150, -160)
-      shape.lineTo(-150, -125)
-      shape.lineTo(-120, -125)
-      shape.lineTo(-120, 25)
-      shape.lineTo(-140, 25)
-
-      return shape;
-    },
-    */
     getShape() {
       const points = [
         { x: -140, y: 60 },
@@ -106,9 +83,31 @@ export default {
       this.three.camera.aspect = window.innerWidth / window.innerHeight
       this.three.camera.updateProjectionMatrix()
       this.three.renderer.setSize(window.innerWidth, window.innerHeight)
+
+      this.render()
+    },
+    onDocumentMouseMove(event) {
+      event.preventDefault()
+
+      this.three.mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+      this.three.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
+
       this.render()
     },
     render() {
+      this.three.raycaster.setFromCamera(this.three.mouse, this.three.camera)
+      var intersects = this.three.raycaster.intersectObjects(this.three.scene.children)
+
+      if (intersects.length > 0) {
+        if (this.INTERSECTED !== intersects[0].object) {
+          this.INTERSECTED = intersects[0].object
+          this.INTERSECTED.material.color.set(this.colors.selected)
+        }
+      } else {
+        this.INTERSECTED && this.INTERSECTED.material.color.set(this.colors.region)
+        this.INTERSECTED = null
+      }
+
       this.three.renderer.render(this.three.scene, this.three.camera)
     }
   }
