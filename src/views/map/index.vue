@@ -13,7 +13,7 @@
       </el-popover>
     </div>
 
-    <div class="el-p">
+    <div v-show="dialogVisible" class="el-p">
       guiwang
     </div>
   </div>
@@ -26,7 +26,7 @@ import coordinates from './coordinates'
 export default {
   data() {
     return {
-      dialogVisible: true,
+      dialogVisible: false,
       three: {
         scene: new THREE.Scene(),
         camera: new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000),
@@ -43,12 +43,28 @@ export default {
     }
   },
   created() {
-    this.initThree()
+    this.initThrees()
   },
   mounted() {
     this.initDom()
   },
   methods: {
+    initThrees() {
+      // this.three.camera.position.set(120, 60, 180)
+      this.three.camera.position.set(600, 300 + 40, 900 - 165)
+
+      this.three.renderer.setClearColor(new THREE.Color(this.colors.background))
+      this.three.renderer.setSize(window.innerWidth, window.innerHeight)
+
+      const axes = new THREE.AxesHelper(400)
+      this.three.scene.add(axes)
+
+      this.addShape()
+
+      // this.three.camera.lookAt(new THREE.Vector3(600, 340, 735))
+      // this.three.camera.lookAt(this.three.scene.position)
+      this.three.renderer.render(this.three.scene, this.three.camera)
+    },
     initThree() {
       this.three.camera.position.set(0, 0, 1000)
 
@@ -57,8 +73,10 @@ export default {
 
       // The X axis is red. The Y axis is green. The Z axis is blue.
       const axes = new THREE.AxesHelper(400)
+      // axes.position.set(-400, 0, 0)
       this.three.scene.add(axes)
 
+      /*
       this.addShape()
 
       const fontJson = require('three/examples/fonts/helvetiker_regular.typeface')
@@ -83,8 +101,13 @@ export default {
       const mesh = new THREE.Mesh(geo2, this.generateLabelMaterial())
       // mesh.position.set(-100, 100, 0)
       this.three.scene.add(mesh)
+      */
 
+      // console.info(JSON.stringify(this.three.scene.position))
       this.three.camera.lookAt(this.three.scene.position)
+      // alert(window.innerWidth + ', ' + (window.innerWidth / 2))
+      // alert(window.innerHeight + ', ' + (window.innerHeight / 2))
+      // this.three.camera.lookAt(new THREE.Vector3(0, 0, 0))
       this.three.renderer.render(this.three.scene, this.three.camera)
     },
     initDom() {

@@ -131,10 +131,37 @@ function tech2() {
   return points
 }
 
-coordinates.push(main())
-coordinates.push(dataCenter())
-coordinates.push(oldMachine())
-coordinates.push(tech())
-coordinates.push(tech2())
+function test() {
+  const points = []
+
+  points.push({ x: 588.7800, y: 327.2017 })
+  points.push({ x: 564.1200, y: 325.9417 })
+  points.push({ x: 565.2000, y: 307.4017 })
+  points.push({ x: 538.7400, y: 306.3217 })
+  points.push({ x: 534.4200, y: 306.1417 })
+  points.push({ x: 475.2000, y: 303.4417 })
+  points.push({ x: 474.4800, y: 322.8817 })
+  points.push({ x: 450.1800, y: 321.6217 })
+  points.push({ x: 451.4400, y: 287.9617 })
+  points.push({ x: 451.8000, y: 278.6017 })
+  points.push({ x: 452.8800, y: 245.4817 })
+  points.push({ x: 477.5400, y: 246.3817 })
+  points.push({ x: 477.0000, y: 266.0017 })
+  points.push({ x: 516.6000, y: 267.6217 })
+  points.push({ x: 527.0400, y: 267.9817 })
+  points.push({ x: 567.1800, y: 269.7817 })
+  points.push({ x: 567.9000, y: 250.1617 })
+  points.push({ x: 592.2000, y: 251.4217 })
+  points.push({ x: 592.2000, y: 251.7817 })
+
+  return points
+}
+
+// coordinates.push(main())
+// coordinates.push(dataCenter())
+// coordinates.push(oldMachine())
+// coordinates.push(tech())
+// coordinates.push(tech2())
+coordinates.push(test())
 
 export default coordinates
