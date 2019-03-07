@@ -23,8 +23,34 @@ import Layout from '../views/layout/Layout'
 **/
 export const constantRouterMap = [
   { path: '/login', component: () => import('@/views/login/index'), hidden: true },
-  { path: '/map', component: () => import('@/views/map/index'), hidden: true },
   { path: '/404', component: () => import('@/views/404'), hidden: true },
+
+  // Samples for Three.js
+  { path: '/three.js/map', name: 'Map', component: () => import('@/views/map/index'), hidden: true },
+  { path: '/three.js', component: () => import('@/views/threejs/index'), hidden: true },
+  { path: '/three.js/geometry/convex', name: 'geometry-convex', component: () => import('@/views/threejs/samples/geometry-convex'), hidden: true },
+  { path: '/three.js/geometry/extrude/shapes2', name: 'geometry-extrude-shapes2', component: () => import('@/views/threejs/samples/geometry-extrude-shapes2'), hidden: true },
+  // {
+  //   path: '/three.js',
+  //   name: 'Three.js',
+  //   redirect: '/three.js/convex',
+  //   component: Layout,
+  //   meta: { title: 'Three.js', icon: 'example' },
+  //   children: [
+  //     {
+  //       path: 'convex',
+  //       name: 'Convex',
+  //       component: () => import('@/views/map/samples/geometry-convex'),
+  //       meta: { title: 'Convex', icon: 'table' }
+  //     },
+  //     {
+  //       path: 'shapes2',
+  //       name: 'Shapes2',
+  //       component: () => import('@/views/map/samples/geometry-extrude-shapes2'),
+  //       meta: { title: 'Shapes2', icon: 'table' }
+  //     }
+  //   ]
+  // },
 
   {
     path: '/',
@@ -141,17 +167,6 @@ export const constantRouterMap = [
       }
     ]
   },
-  // {
-  //   path: '/map',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/map/index'),
-  //       meta: { title: 'Map', icon: 'link' }
-  //     }
-  //   ]
-  // },
 
   { path: '*', redirect: '/404', hidden: true }
 ]
