@@ -13,9 +13,9 @@
       <div class="box-content">
         <div v-for="b in buildings" :key="b.building">
           <label>{{ b.building }}</label>
-          <div v-for="o in b.organizations" :key="o.name">
-            {{ o.name }} {{ o.location ? `- ${o.location}` : '' }}
-          </div>
+          <ul v-for="o in b.organizations" :key="o.name">
+            <li>{{ o.name }} {{ o.location ? `- ${o.location}` : '' }}</li>
+          </ul>
         </div>
       </div>
     </el-card>
@@ -188,27 +188,5 @@ export default {
   .box-content {
     max-height: 400px;
     overflow: auto;
-  }
-  .el-p {
-    background-color: #d3dce6;
-    width: 300px;
-    height: 200px;
-    position: fixed;
-    top: 60px;
-    left: 10px;
-    /*transform-origin: center top 0px;*/
-    /*z-index: 2001;*/
-    /*osition: absolute;*/
-    /*min-width: 150px;*/
-    /*border: 1px solid #ebeef5;*/
-    /*padding: 12px;*/
-    /*z-index: 2001;*/
-    /*color: #606266;*/
-    /*line-height: 1.4;*/
-    /*text-align: justify;*/
-    /*font-size: 14px;*/
-    -webkit-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-    border-radius: 4px;
   }
 </style>
