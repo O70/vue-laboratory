@@ -29,7 +29,7 @@ import coordinates from './coordinates'
 export default {
   data() {
     return {
-      orgName: null,
+      orgName: '',
       buildings: [],
       dialogVisible: false,
       three: {
@@ -44,8 +44,7 @@ export default {
         background: 0x414a58,
         region: 0x343c47,
         selected: 0x2b333b
-      },
-      INTERSECTED: null
+      }
     }
   },
   watch: {
@@ -68,7 +67,7 @@ export default {
             this.buildings.push({ building, organizations })
 
             it.material.color.set(this.colors.selected)
-            this.three.renderer.render(this.three.scene, this.three.camera)
+            this.render()
           }
         })
       }
@@ -98,13 +97,13 @@ export default {
       this.addShape()
 
       this.three.camera.lookAt(this.three.scene.position)
-      this.three.renderer.render(this.three.scene, this.three.camera)
+      this.render()
     },
     initDom() {
       this.$refs.container.appendChild(this.three.renderer.domElement)
       window.addEventListener('resize', this.onWindowResize, false)
       // document.addEventListener('mousemove', this.onDocumentMouseMove, false)
-      document.addEventListener('click', this.onDocumentMouseMove, false)
+      document.addEventListener('click', this.onDocumentMouseClick, false)
     },
     addShape() {
       coordinates.forEach(({ points, userData }) => {
@@ -126,38 +125,30 @@ export default {
 
       this.render()
     },
-    onDocumentMouseMove(event) {
+    onDocumentMouseClick(event) {
       event.preventDefault()
 
       this.three.mouse.x = (event.clientX / window.innerWidth) * 2 - 1
       this.three.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
 
-      this.render()
-    },
-    render() {
       this.three.raycaster.setFromCamera(this.three.mouse, this.three.camera)
       const intersects = this.three.raycaster.intersectObjects(this.three.group.children)
 
       if (intersects.length > 0 && !intersects[0].object.geometry.userData.placeholder) {
-        if (this.INTERSECTED !== intersects[0].object) {
-          this.INTERSECTED && this.INTERSECTED.material.color.set(this.colors.region)
+        this.orgName = ''
 
-          this.INTERSECTED = intersects[0].object
-          this.INTERSECTED.material.color.set(this.colors.selected)
-          // this.dialogVisible = true
+        setTimeout(() => {
+          this.resetColor()
 
-          this.orgName = null
-          this.buildings = []
           const { building, organizations } = intersects[0].object.geometry.userData
           this.buildings.push({ building, organizations })
-        }
-      } /* else {
-        this.INTERSECTED && this.INTERSECTED.material.color.set(this.colors.region)
-        this.INTERSECTED = null
-        // this.dialogVisible = false
-      }
-      */
 
+          intersects[0].object.material.color.set(this.colors.selected)
+          this.render()
+        })
+      }
+    },
+    render() {
       this.three.renderer.render(this.three.scene, this.three.camera)
     },
     resetColor() {
@@ -165,8 +156,8 @@ export default {
 
       this.three.group.children.forEach(it => {
         it.material.color.set(this.colors.region)
-        this.three.renderer.render(this.three.scene, this.three.camera)
       })
+      this.render()
     }
   }
 }

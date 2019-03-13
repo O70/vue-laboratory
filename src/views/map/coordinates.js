@@ -26,7 +26,9 @@ const coordinates = [
     ],
     userData: {
       building: '老机房',
-      organizations: []
+      organizations: [
+        { name: '非洲应用所', spell: 'feizhouyingyongsuo', initials: 'fzyys', shortName: '非洲所', shortSpell: 'feizhousuo', shortInitials: 'fzs', location: '506' }
+      ]
     }
   },
   // 科技会议中心
@@ -49,7 +51,9 @@ const coordinates = [
     ],
     userData: {
       building: '科技会议中心',
-      organizations: []
+      organizations: [
+        { name: '计算机应用研究所', spell: 'jisuanjiyingyongyanjiusuo', initials: 'jsjyyyjs', shortName: '计算所', shortSpell: 'jisuansuo', shortInitials: 'jss', location: '444' }
+      ]
     }
   },
   // 科技会议中心北部
