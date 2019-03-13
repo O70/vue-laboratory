@@ -179,7 +179,7 @@ export default {
   }
 
   .box-card {
-    width: 480px;
+    width: 380px;
     position: fixed;
     top: 10px;
     left: 10px;
