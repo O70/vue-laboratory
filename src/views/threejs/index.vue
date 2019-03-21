@@ -8,6 +8,11 @@
       </el-col>
       <el-col :span="6">
         <div class="grid-content bg-purple">
+          <router-link :to="{ name: 'Map-Backend' }" target="_blank">Map Backend</router-link>
+        </div>
+      </el-col>
+      <el-col :span="6">
+        <div class="grid-content bg-purple">
           <router-link :to="{ name: 'geometry-convex' }" target="_blank">geometry-convex</router-link>
         </div>
       </el-col>

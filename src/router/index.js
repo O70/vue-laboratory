@@ -27,6 +27,7 @@ export const constantRouterMap = [
 
   // Samples for Three.js
   { path: '/three.js/map', name: 'Map', component: () => import('@/views/map/index'), hidden: true },
+  { path: '/three.js/map/backend', name: 'Map-Backend', component: () => import('@/views/map/backend/index'), hidden: true },
   { path: '/three.js', component: () => import('@/views/threejs/index'), hidden: true },
   { path: '/three.js/geometry/convex', name: 'geometry-convex', component: () => import('@/views/threejs/samples/geometry-convex'), hidden: true },
   { path: '/three.js/geometry/extrude/shapes2', name: 'geometry-extrude-shapes2', component: () => import('@/views/threejs/samples/geometry-extrude-shapes2'), hidden: true },

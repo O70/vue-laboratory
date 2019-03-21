@@ -90,7 +90,15 @@ export default {
       // const axes = new THREE.AxesHelper(400)
       // this.three.scene.add(axes)
 
-      this.three.group.position.x = -350
+      // alert(window.innerWidth + ', ' + window.innerHeight + ', ' + (window.innerWidth / window.innerHeight)
+      //   + ': ' + (window.innerWidth / (window.innerWidth / window.innerHeight)))
+      const t = window.innerWidth / window.innerHeight
+      // alert(t * (window.innerWidth / 3) + ', ' + ((window.innerWidth / 3) / t))
+      alert(((window.innerWidth / 3) / t))
+      // alert(-(window.innerWidth / 5))
+      // alert(window.innerWidth / window.innerHeight)
+      // this.three.group.position.x = -(window.innerWidth / 5)
+      this.three.group.position.x = -((window.innerWidth / 3) / t)
       this.three.group.position.y = -500
       this.three.scene.add(this.three.group)
 
