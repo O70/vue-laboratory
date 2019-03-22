@@ -8,7 +8,25 @@
           <el-card class="trs">
             <div slot="header" class="clearfix">
               <span><label>{{ buildings[r * layout.cols + c].name }}</label></span>
-              <!--<el-button type="primary" icon="el-icon-plus" size="mini" circle style="float: right;"/>-->
+              <div style="float: right;">
+                <el-tooltip content="删除建筑" placement="top">
+                  <el-button type="danger" icon="el-icon-delete" size="mini" circle class="mb" @click="remove(buildings[r * layout.cols + c].id)"/>
+                </el-tooltip>
+                <el-tooltip content="楼层信息" placement="top">
+                  <el-button type="success" icon="el-icon-view" size="mini" circle class="mb"/>
+                </el-tooltip>
+                <el-tooltip content="坐标集" placement="top">
+                  <el-popover
+                    placement="right-end"
+                    width="240">
+                    <el-table :data="buildings[r * layout.cols + c].points" :max-height="layout.canvasWidth" border style="width: 100%;">
+                      <el-table-column property="x" label="X"/>
+                      <el-table-column property="y" label="Y"/>
+                    </el-table>
+                    <el-button slot="reference" type="warning" icon="el-icon-location" size="mini" circle class="mb"/>
+                  </el-popover>
+                </el-tooltip>
+              </div>
             </div>
             <div
               :id="`content-${buildings[r * layout.cols + c].id}`"
@@ -31,6 +49,7 @@ export default {
     const cols = 4
 
     return {
+      visible2: false,
       layout: {
         gutter,
         rows: 0,
@@ -216,15 +235,23 @@ export default {
         // scene.userData.controls.update()
         this.renderer.render(scene, camera)
       })
+    },
+    remove(id) {
+      this.$confirm('确认删除？').then(_ => {
+        this.$message({
+          message: `TODO: Remove Item ${id}`,
+          showClose: true
+        })
+      }).catch(_ => {})
     }
   }
 }
 </script>
-<!--<style rel="stylesheet/scss" lang="scss" scoped>-->
-<style>
-  .el-button {
+<style rel="stylesheet/scss" lang="scss" scoped>
+  .mb {
     outline: none;
-    padding: 2px;
+    padding: 1px;
+    margin-left: 1px;
   }
   .clearfix:before,
   .clearfix:after {
@@ -234,34 +261,8 @@ export default {
   .clearfix:after {
     clear: both;
   }
-
-  /** {*/
-    /*box-sizing: border-box;*/
-    /*-moz-box-sizing: border-box;*/
-  /*}*/
-  /*body {*/
-    /*color: #000;*/
-    /*font-family:Monospace;*/
-    /*font-size:13px;*/
-    /*background-color: #fff;*/
-    /*margin: 0;*/
-  /*}*/
-  /*#info {*/
-    /*position: absolute;*/
-    /*top: 0; width: 100%;*/
-    /*padding: 5px;*/
-    /*text-align:center;*/
-  /*}*/
-  /*.content {*/
-    /*position: absolute;*/
-    /*top: 0;*/
-    /*width: 100%;*/
-    /*!*z-index: 1;*!*/
-    /*padding: 3em 0 0 0;*/
-  /*}*/
-  /*a {*/
-    /*color: #0080ff;*/
-  /*}*/
+</style>
+<style>
   #c {
     position: absolute;
     left: 0;
@@ -269,32 +270,7 @@ export default {
     width: 100%;
     height: 100%;
   }
-  /*.list-item {*/
-    /*display: inline-block;*/
-    /*margin: 1em;*/
-    /*padding: 1em;*/
-    /*box-shadow: 1px 2px 4px 0px rgba(0,0,0,0.25);*/
-  /*}*/
-  /*.list-item .scene {*/
-     /*width: 200px;*/
-     /*height: 200px;*/
-   /*}*/
-  /*.scene {*/
-    /*width: 200px;*/
-    /*height: 200px;*/
-  /*}*/
   .trs {
     background-color: transparent;
   }
-  /*.scene {*/
-    /*width: 200px;*/
-    /*height: 200px;*/
-  /*}*/
-  /*.list-item .description {*/
-    /*color: #888;*/
-    /*font-family: sans-serif;*/
-    /*font-size: large;*/
-    /*width: 200px;*/
-    /*margin-top: 1.5em;*/
-  /*}*/
 </style>
