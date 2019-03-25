@@ -10,16 +10,37 @@
               <span><label>{{ buildings[r * layout.cols + c].name }}</label></span>
               <div style="float: right;">
                 <el-tooltip content="删除建筑" placement="top">
-                  <el-button type="danger" icon="el-icon-delete" size="mini" circle class="mb" @click="remove(buildings[r * layout.cols + c].id)"/>
+                  <el-popover
+                    v-model="buildings[r * layout.cols + c].visible"
+                    placement="top"
+                    width="130">
+                    <p>确定删除？</p>
+                    <div style="text-align: right; margin: 0">
+                      <el-button size="mini" type="text" @click="buildings[r * layout.cols + c].visible = false">取消</el-button>
+                      <el-button type="primary" size="mini" @click="remove(r * layout.cols + c)">确定</el-button>
+                    </div>
+                    <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" circle class="mb"/>
+                  </el-popover>
                 </el-tooltip>
                 <el-tooltip content="楼层信息" placement="top">
-                  <el-button type="success" icon="el-icon-view" size="mini" circle class="mb"/>
+                  <el-popover
+                    placement="bottom"
+                    width="600">
+                    <el-table :data="buildings[r * layout.cols + c].organizations" :max-height="layout.canvasWidth" border>
+                      <el-table-column type="index" width="40" align="center"/>
+                      <el-table-column property="name" label="名称"/>
+                      <el-table-column property="shortName" label="简称"/>
+                      <el-table-column property="location" label="位置"/>
+                    </el-table>
+                    <el-button slot="reference" type="success" icon="el-icon-view" size="mini" circle class="mb"/>
+                  </el-popover>
                 </el-tooltip>
                 <el-tooltip content="坐标集" placement="top">
                   <el-popover
                     placement="right-end"
                     width="240">
-                    <el-table :data="buildings[r * layout.cols + c].points" :max-height="layout.canvasWidth" border style="width: 100%;">
+                    <el-table :data="buildings[r * layout.cols + c].points" :max-height="layout.canvasWidth" border>
+                      <el-table-column type="index" width="40" align="center"/>
                       <el-table-column property="x" label="X"/>
                       <el-table-column property="y" label="Y"/>
                     </el-table>
@@ -48,8 +69,11 @@ export default {
     const gutter = 20
     const cols = 4
 
+    buildings.forEach(it => {
+      it.visible = false
+    })
+
     return {
-      visible2: false,
       layout: {
         gutter,
         rows: 0,
@@ -236,13 +260,14 @@ export default {
         this.renderer.render(scene, camera)
       })
     },
-    remove(id) {
-      this.$confirm('确认删除？').then(_ => {
-        this.$message({
-          message: `TODO: Remove Item ${id}`,
-          showClose: true
-        })
-      }).catch(_ => {})
+    remove(ind) {
+      this.buildings[ind].visible = false
+      // this.$confirm('确认删除？').then(_ => {
+      //   this.$message({
+      //     message: `TODO: Remove Item ${id}`,
+      //     showClose: true
+      //   })
+      // }).catch(_ => {})
     }
   }
 }
