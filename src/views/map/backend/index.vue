@@ -2,21 +2,37 @@
   <div class="app-container">
     <canvas id="c"/>
 
-    <div v-if="buildings.length > 0">
+    <el-row :gutter="layout.gutter">
+      <el-col>
+        <el-card>
+          <el-input
+            v-model.trim="buildingName"
+            :clearable="true"
+            placeholder="请输入关键字"
+            prefix-icon="el-icon-search"
+            style="width: 600px;"/>
+          <div style="float: right;">
+            <el-button type="primary" icon="el-icon-plus" circle/>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+
+    <div v-if="grids.length > 0">
       <el-row v-for="(rv, r) in layout.rows" :key="`row-${rv}`" :gutter="layout.gutter" style="margin-top: 20px;">
-        <el-col v-for="(cv, c) in layout.cols" v-if="r * layout.cols + c < buildings.length" :key="`col-${rv}-${cv}`" :span="layout.span">
+        <el-col v-for="(cv, c) in layout.cols" v-if="r * layout.cols + c < grids.length" :key="`col-${rv}-${cv}`" :span="layout.span">
           <el-card class="trs">
             <div slot="header" class="clearfix">
-              <span><label>{{ buildings[r * layout.cols + c].name }}</label></span>
+              <span><label>{{ grids[r * layout.cols + c].name }}</label></span>
               <div style="float: right;">
                 <el-tooltip content="删除建筑" placement="top">
                   <el-popover
-                    v-model="buildings[r * layout.cols + c].visible"
-                    placement="top"
+                    v-model="grids[r * layout.cols + c].visible"
+                    placement="bottom"
                     width="130">
                     <p>确定删除？</p>
                     <div style="text-align: right; margin: 0">
-                      <el-button size="mini" type="text" @click="buildings[r * layout.cols + c].visible = false">取消</el-button>
+                      <el-button size="mini" type="text" @click="grids[r * layout.cols + c].visible = false">取消</el-button>
                       <el-button type="primary" size="mini" @click="remove(r * layout.cols + c)">确定</el-button>
                     </div>
                     <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" circle class="mb"/>
@@ -26,7 +42,7 @@
                   <el-popover
                     placement="bottom"
                     width="600">
-                    <el-table :data="buildings[r * layout.cols + c].organizations" :max-height="layout.canvasWidth" border>
+                    <el-table :data="grids[r * layout.cols + c].organizations" :max-height="layout.canvasWidth" border>
                       <el-table-column type="index" width="40" align="center"/>
                       <el-table-column property="name" label="名称"/>
                       <el-table-column property="shortName" label="简称"/>
@@ -37,9 +53,9 @@
                 </el-tooltip>
                 <el-tooltip content="坐标集" placement="top">
                   <el-popover
-                    placement="right-end"
+                    placement="bottom"
                     width="240">
-                    <el-table :data="buildings[r * layout.cols + c].points" :max-height="layout.canvasWidth" border>
+                    <el-table :data="grids[r * layout.cols + c].points" :max-height="layout.canvasWidth" border>
                       <el-table-column type="index" width="40" align="center"/>
                       <el-table-column property="x" label="X"/>
                       <el-table-column property="y" label="Y"/>
@@ -50,7 +66,7 @@
               </div>
             </div>
             <div
-              :id="`content-${buildings[r * layout.cols + c].id}`"
+              :id="`content-${grids[r * layout.cols + c].id}`"
               :style="{ width: `${layout.canvasWidth}px`, height: `${layout.canvasWidth}px` }">
               <div :style="{ width: `${layout.canvasWidth}px`, height: `${layout.canvasWidth}px` }" class="scene"/>
             </div>
@@ -69,8 +85,8 @@ export default {
     const gutter = 20
     const cols = 4
 
-    buildings.forEach(it => {
-      it.visible = false
+    const grids = buildings.map(it => {
+      return Object.assign({}, it, { visible: false })
     })
 
     return {
@@ -89,16 +105,17 @@ export default {
         region: 0x343c47
       },
       buildings,
-      geometries: [
-        new THREE.BoxBufferGeometry(1, 1, 1),
-        new THREE.SphereBufferGeometry(0.5, 12, 8),
-        new THREE.DodecahedronBufferGeometry(0.5),
-        new THREE.CylinderBufferGeometry(0.5, 0.5, 1, 12)
-      ]
+      grids,
+      buildingName: null
+    }
+  },
+  watch: {
+    buildingName() {
+      this.grids = this.buildings.filter(it => it.name.indexOf(this.buildingName) > -1)
     }
   },
   created() {
-    this.layout.rows = Math.ceil(this.buildings.length / this.layout.cols)
+    this.layout.rows = Math.ceil(this.grids.length / this.layout.cols)
   },
   mounted() {
     this.init()
@@ -106,7 +123,7 @@ export default {
   },
   methods: {
     init() {
-      this.buildings.forEach(item => {
+      this.grids.forEach(item => {
         const scene = new THREE.Scene()
         scene.userData.element = document.getElementById(`content-${item.id}`).querySelector('.scene')
 
@@ -127,37 +144,6 @@ export default {
       this.renderer.setPixelRatio(window.devicePixelRatio)
 
       this.render()
-    },
-    addGeometry(scene) {
-      const geometry = this.geometries[this.geometries.length * Math.random() | 0]
-      const material = new THREE.MeshStandardMaterial({
-        color: new THREE.Color().setHSL(Math.random(), 1, 0.75),
-        roughness: 0.5,
-        metalness: 0,
-        flatShading: true
-      })
-      scene.add(new THREE.Mesh(geometry, material))
-      scene.add(new THREE.HemisphereLight(0xaaaaaa, 0x444444))
-
-      const light = new THREE.DirectionalLight(0xffffff, 0.5)
-      light.position.set(1, 1, 1)
-      scene.add(light)
-    },
-    addLine(scene) {
-      var material = new THREE.LineBasicMaterial({ color: 0xff0000 })
-
-      var geometry = new THREE.Geometry()
-      geometry.vertices.push(
-        new THREE.Vector3(-1.3, 0, 0),
-        new THREE.Vector3(0, 1.3, 0),
-        new THREE.Vector3(1.3, 0, 0),
-        new THREE.Vector3(0, -1.3, 0),
-        // new THREE.Vector3(-1.3, 0, 0),
-      )
-
-      // var line = new THREE.Line(geometry, material)
-      var line = new THREE.LineLoop(geometry, material)
-      scene.add(line)
     },
     addBuilding(scene, item) {
       const areaPts = []
@@ -261,7 +247,7 @@ export default {
       })
     },
     remove(ind) {
-      this.buildings[ind].visible = false
+      this.grids[ind].visible = false
       // this.$confirm('确认删除？').then(_ => {
       //   this.$message({
       //     message: `TODO: Remove Item ${id}`,
