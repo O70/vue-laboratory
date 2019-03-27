@@ -488,10 +488,4 @@ buildings.forEach((b, bi) => {
   })
 })
 
-// const buildings = data.map((val, index) => {
-//   return { id: `id${index}`, sort: index + 1, ...val }
-// })
-
 export default buildings
-
-// export { buildings }

@@ -27,7 +27,7 @@
                   </el-popover>
                 </el-tooltip>
                 <el-tooltip content="编辑" placement="top">
-                  <el-popover
+                  <!--<el-popover
                     placement="bottom"
                     width="300">
                     <div>
@@ -44,6 +44,19 @@
                       </el-row>
                     </div>
                     <el-button slot="reference" type="primary" icon="el-icon-edit" size="mini" circle class="mb"/>
+                  </el-popover>-->
+                  <el-button type="primary" icon="el-icon-edit" size="mini" circle class="mb" @click="openEdit(r * layout.cols + c)"/>
+                </el-tooltip>
+                <el-tooltip content="坐标集" placement="top">
+                  <el-popover
+                    placement="bottom"
+                    width="240">
+                    <el-table :data="buildings[r * layout.cols + c].points" :max-height="layout.canvasWidth" border>
+                      <el-table-column property="sort" label="#" width="40" align="center"/>
+                      <el-table-column property="x" label="X"/>
+                      <el-table-column property="y" label="Y"/>
+                    </el-table>
+                    <el-button slot="reference" type="warning" icon="el-icon-location" size="mini" circle class="mb"/>
                   </el-popover>
                 </el-tooltip>
                 <el-tooltip content="楼层信息" placement="top">
@@ -51,24 +64,12 @@
                     placement="bottom"
                     width="600">
                     <el-table :data="buildings[r * layout.cols + c].organizations" :max-height="layout.canvasWidth" border>
-                      <el-table-column type="index" width="40" align="center"/>
+                      <el-table-column property="sort" label="#" width="40" align="center"/>
                       <el-table-column property="name" label="名称"/>
                       <el-table-column property="shortName" label="简称"/>
                       <el-table-column property="location" label="位置"/>
                     </el-table>
                     <el-button slot="reference" type="success" icon="el-icon-view" size="mini" circle class="mb"/>
-                  </el-popover>
-                </el-tooltip>
-                <el-tooltip content="坐标集" placement="top">
-                  <el-popover
-                    placement="bottom"
-                    width="240">
-                    <el-table :data="buildings[r * layout.cols + c].points" :max-height="layout.canvasWidth" border>
-                      <el-table-column type="index" width="40" align="center"/>
-                      <el-table-column property="x" label="X"/>
-                      <el-table-column property="y" label="Y"/>
-                    </el-table>
-                    <el-button slot="reference" type="warning" icon="el-icon-location" size="mini" circle class="mb"/>
                   </el-popover>
                 </el-tooltip>
               </div>
@@ -82,13 +83,19 @@
         </el-col>
       </el-row>
     </div>
+
+    <el-dialog :visible.sync="dialogVisible" :title="dialogTitle || 'None'" width="80%">
+      <map-form v-model="formObject" :max-height="layout.canvasWidth"/>
+    </el-dialog>
   </div>
 </template>
 <script>
 import * as THREE from 'three'
 import buildings from './data'
+import MapForm from './form'
 
 export default {
+  components: { MapForm },
   data() {
     const gutter = 20
     const cols = 4
@@ -114,6 +121,7 @@ export default {
       },
       buildings,
       dialogVisible: false,
+      dialogTitle: null,
       formObject: {}
     }
   },
@@ -249,8 +257,10 @@ export default {
         this.renderer.render(scene, camera)
       })
     },
-    openEdit() {
+    openEdit(index) {
       this.dialogVisible = true
+      this.formObject = this.buildings[index]
+      this.dialogTitle = this.formObject.name
     },
     remove(ind) {
       this.buildings[ind].visible = false
