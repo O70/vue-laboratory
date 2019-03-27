@@ -2,47 +2,55 @@
   <div class="app-container">
     <canvas id="c"/>
 
-    <el-row :gutter="layout.gutter">
-      <el-col>
-        <el-card>
-          <el-input
-            v-model.trim="buildingName"
-            :clearable="true"
-            placeholder="请输入关键字"
-            prefix-icon="el-icon-search"
-            style="width: 600px;"/>
-          <div style="float: right;">
-            <el-button type="primary" icon="el-icon-plus" circle/>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
+    <div class="el-add">
+      <el-button type="primary" icon="el-icon-plus" circle @click="openEdit"/>
+    </div>
 
-    <div v-if="grids.length > 0">
-      <el-row v-for="(rv, r) in layout.rows" :key="`row-${rv}`" :gutter="layout.gutter" style="margin-top: 20px;">
-        <el-col v-for="(cv, c) in layout.cols" v-if="r * layout.cols + c < grids.length" :key="`col-${rv}-${cv}`" :span="layout.span">
+    <div v-if="buildings.length > 0">
+      <el-row v-for="(rv, r) in layout.rows" :key="`row-${rv}`" :gutter="layout.gutter" :style="{ marginTop: `${r===0?0:20}px` }">
+        <el-col v-for="(cv, c) in layout.cols" v-if="r * layout.cols + c < buildings.length" :key="`col-${rv}-${cv}`" :span="layout.span">
           <el-card class="trs">
             <div slot="header" class="clearfix">
-              <span><label>{{ grids[r * layout.cols + c].name }}</label></span>
+              <span><label>{{ buildings[r * layout.cols + c].name }}</label></span>
               <div style="float: right;">
-                <el-tooltip content="删除建筑" placement="top">
+                <el-tooltip content="删除" placement="top">
                   <el-popover
-                    v-model="grids[r * layout.cols + c].visible"
+                    v-model="buildings[r * layout.cols + c].visible"
                     placement="bottom"
                     width="130">
                     <p>确定删除？</p>
                     <div style="text-align: right; margin: 0">
-                      <el-button size="mini" type="text" @click="grids[r * layout.cols + c].visible = false">取消</el-button>
+                      <el-button size="mini" type="text" @click="buildings[r * layout.cols + c].visible = false">取消</el-button>
                       <el-button type="primary" size="mini" @click="remove(r * layout.cols + c)">确定</el-button>
                     </div>
                     <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" circle class="mb"/>
+                  </el-popover>
+                </el-tooltip>
+                <el-tooltip content="编辑" placement="top">
+                  <el-popover
+                    placement="bottom"
+                    width="300">
+                    <div>
+                      <el-row :gutter="layout.gutter">
+                        <el-col :span="6">
+                          <el-input :value="buildings[r * layout.cols + c].sort" placeholder="序号"/>
+                        </el-col>
+                        <el-col :span="12">
+                          <el-input :value="buildings[r * layout.cols + c].name" placeholder="名称"/>
+                        </el-col>
+                        <el-col :span="6">
+                          <el-button type="primary" icon="el-icon-edit" size="mini" circle/>
+                        </el-col>
+                      </el-row>
+                    </div>
+                    <el-button slot="reference" type="primary" icon="el-icon-edit" size="mini" circle class="mb"/>
                   </el-popover>
                 </el-tooltip>
                 <el-tooltip content="楼层信息" placement="top">
                   <el-popover
                     placement="bottom"
                     width="600">
-                    <el-table :data="grids[r * layout.cols + c].organizations" :max-height="layout.canvasWidth" border>
+                    <el-table :data="buildings[r * layout.cols + c].organizations" :max-height="layout.canvasWidth" border>
                       <el-table-column type="index" width="40" align="center"/>
                       <el-table-column property="name" label="名称"/>
                       <el-table-column property="shortName" label="简称"/>
@@ -55,7 +63,7 @@
                   <el-popover
                     placement="bottom"
                     width="240">
-                    <el-table :data="grids[r * layout.cols + c].points" :max-height="layout.canvasWidth" border>
+                    <el-table :data="buildings[r * layout.cols + c].points" :max-height="layout.canvasWidth" border>
                       <el-table-column type="index" width="40" align="center"/>
                       <el-table-column property="x" label="X"/>
                       <el-table-column property="y" label="Y"/>
@@ -66,7 +74,7 @@
               </div>
             </div>
             <div
-              :id="`content-${grids[r * layout.cols + c].id}`"
+              :id="`content-${buildings[r * layout.cols + c].id}`"
               :style="{ width: `${layout.canvasWidth}px`, height: `${layout.canvasWidth}px` }">
               <div :style="{ width: `${layout.canvasWidth}px`, height: `${layout.canvasWidth}px` }" class="scene"/>
             </div>
@@ -85,8 +93,8 @@ export default {
     const gutter = 20
     const cols = 4
 
-    const grids = buildings.map(it => {
-      return Object.assign({}, it, { visible: false })
+    buildings.forEach(it => {
+      it.visible = false
     })
 
     return {
@@ -105,17 +113,12 @@ export default {
         region: 0x343c47
       },
       buildings,
-      grids,
-      buildingName: null
-    }
-  },
-  watch: {
-    buildingName() {
-      this.grids = this.buildings.filter(it => it.name.indexOf(this.buildingName) > -1)
+      dialogVisible: false,
+      formObject: {}
     }
   },
   created() {
-    this.layout.rows = Math.ceil(this.grids.length / this.layout.cols)
+    this.layout.rows = Math.ceil(this.buildings.length / this.layout.cols)
   },
   mounted() {
     this.init()
@@ -123,7 +126,7 @@ export default {
   },
   methods: {
     init() {
-      this.grids.forEach(item => {
+      this.buildings.forEach(item => {
         const scene = new THREE.Scene()
         scene.userData.element = document.getElementById(`content-${item.id}`).querySelector('.scene')
 
@@ -246,8 +249,11 @@ export default {
         this.renderer.render(scene, camera)
       })
     },
+    openEdit() {
+      this.dialogVisible = true
+    },
     remove(ind) {
-      this.grids[ind].visible = false
+      this.buildings[ind].visible = false
       // this.$confirm('确认删除？').then(_ => {
       //   this.$message({
       //     message: `TODO: Remove Item ${id}`,
@@ -271,6 +277,16 @@ export default {
   }
   .clearfix:after {
     clear: both;
+  }
+  .el-add {
+    position: fixed;
+    right: 100px;
+    bottom: 100px;
+    z-index: 2002;
+    opacity: 0.4;
+  }
+  .el-add:hover {
+    opacity: 1;
   }
 </style>
 <style>

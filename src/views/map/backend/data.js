@@ -1,4 +1,4 @@
-const data = [
+const buildings = [
   {
     name: '数据中心',
     points: [
@@ -475,9 +475,23 @@ const data = [
   }
 ]
 
-const buildings = data.map((val, index) => {
-  return { id: `id${index}`, ...val }
+buildings.forEach((b, bi) => {
+  b.id = `id${bi}`
+  b.sort = bi + 1
+
+  b.points.forEach((p, pi) => {
+    p.sort = pi + 1
+  })
+
+  b.organizations.forEach((p, pi) => {
+    p.sort = pi + 1
+  })
 })
+
+// const buildings = data.map((val, index) => {
+//   return { id: `id${index}`, sort: index + 1, ...val }
+// })
 
 export default buildings
 
+// export { buildings }
