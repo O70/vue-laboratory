@@ -237,6 +237,7 @@ export default {
       this.form.title = this.form.value ? this.form.value.name : null
     },
     resetForm() {
+      this.$refs.mapForm.resetBuilding()
       this.$refs.mapForm.clearPoint()
       this.$refs.mapForm.clearOrg()
     },

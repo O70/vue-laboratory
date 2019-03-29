@@ -2,11 +2,11 @@
   <div>
     <el-row>
       <el-col>
-        <el-form :inline="true" :model="building">
-          <el-form-item>
-            <el-input v-model="building.sort" placeholder="序号" size="small" style="width: 60px;"/>
+        <el-form ref="buildingForm" :inline="true" :model="building" :rules="rules">
+          <el-form-item prop="sort">
+            <el-input v-model.number="building.sort" placeholder="序号" size="small" style="width: 60px;"/>
           </el-form-item>
-          <el-form-item>
+          <el-form-item prop="name">
             <el-input v-model="building.name" placeholder="名称" size="small" style="width: 340px;"/>
           </el-form-item>
           <el-form-item>
@@ -16,18 +16,18 @@
         </el-form>
       </el-col>
     </el-row>
-    <div v-if="value.id">
+    <div v-show="value.id">
       <el-row :gutter="20">
         <el-col :span="10">
-          <el-form :inline="true" :model="point">
-            <el-form-item>
-              <el-input v-model="point.sort" placeholder="序号" size="small" style="width: 60px;"/>
+          <el-form ref="pointForm" :inline="true" :model="point" :rules="rules">
+            <el-form-item prop="sort">
+              <el-input v-model.number="point.sort" placeholder="序号" size="small" style="width: 60px;"/>
             </el-form-item>
-            <el-form-item>
-              <el-input v-model="point.x" placeholder="X" size="small"/>
+            <el-form-item prop="x">
+              <el-input v-model.number="point.x" placeholder="X" size="small"/>
             </el-form-item>
-            <el-form-item>
-              <el-input v-model="point.y" placeholder="Y" size="small"/>
+            <el-form-item prop="y">
+              <el-input v-model.number="point.y" placeholder="Y" size="small"/>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" icon="el-icon-check" size="mini" circle @click="savePoint"/>
@@ -52,11 +52,11 @@
           </el-table>
         </el-col>
         <el-col :span="14">
-          <el-form :inline="true" :model="organization">
-            <el-form-item>
-              <el-input v-model="organization.sort" placeholder="序号" size="small" style="width: 60px;"/>
+          <el-form ref="orgForm" :inline="true" :model="organization" :rules="rules">
+            <el-form-item prop="sort">
+              <el-input v-model.number="organization.sort" placeholder="序号" size="small" style="width: 60px;"/>
             </el-form-item>
-            <el-form-item>
+            <el-form-item prop="name">
               <el-input v-model="organization.name" placeholder="名称" size="small"/>
             </el-form-item>
             <el-form-item>
@@ -99,7 +99,7 @@ export default {
     value: {
       type: Object,
       default() {
-        return { id: null, name: null, sort: 0, points: [], organizations: [] }
+        return { id: null, name: null, sort: null, points: [], organizations: [] }
       }
     },
     maxHeight: {
@@ -109,13 +109,28 @@ export default {
   },
   data() {
     const { id, name, sort } = this.value
-    const point = { id: null, bid: id, x: 0, y: 0, sort: 0 }
-    const organization = { id: null, bid: id, name: null, shortName: null, location: null }
+    const point = { id: null, bid: id, x: null, y: null, sort: null }
+    const organization = { id: null, bid: id, name: null, shortName: null, location: null, sort: null }
     return {
       building: { id, name, sort },
-      point,
-      organization,
-      source: { point, organization }
+      point: Object.assign({}, point),
+      organization: Object.assign({}, organization),
+      source: { point, organization },
+      rules: {
+        name: { required: true, message: '请输入名称' },
+        sort: [
+          { required: true, message: '请输入序号' },
+          { type: 'integer', min: 1, message: '大于0整数' }
+        ],
+        x: [
+          { required: true, message: '请输入x坐标' },
+          { type: 'number', message: '必须为数值' }
+        ],
+        y: [
+          { required: true, message: '请输入y坐标' },
+          { type: 'number', message: '必须为数值' }
+        ]
+      }
     }
   },
   computed: {
@@ -135,35 +150,46 @@ export default {
   methods: {
     saveBuilding() {
       // Map TODO
-      this.$message('Save Building')
+      this.$refs['buildingForm'].validate(valid => {
+        if (valid) this.$message('Save Building')
+      })
     },
     resetBuilding() {
+      this.$refs['buildingForm'].resetFields()
       const { name, sort } = this.value
       this.building.name = name
       this.building.sort = sort
     },
     savePoint() {
       // Map TODO
-      this.$message('Save Point')
+      this.$refs['pointForm'].validate(valid => {
+        if (valid) this.$message('Save Point')
+      })
     },
     resetPoint() {
       // Map TODO
+      this.$refs['pointForm'].resetFields()
       this.point = Object.assign({},
         this.points.find(it => it.id === this.point.id) || this.source.point)
     },
     clearPoint() {
+      this.$refs['pointForm'].resetFields()
       this.point = Object.assign({}, this.source.point)
     },
     saveOrg() {
       // Map TODO
-      this.$message('Save Organization')
+      this.$refs['orgForm'].validate(valid => {
+        if (valid) this.$message('Save Organization')
+      })
     },
     resetOrg() {
       // Map TODO
+      this.$refs['orgForm'].resetFields()
       this.organization = Object.assign({},
         this.organizations.find(it => it.id === this.organization.id) || this.source.organization)
     },
     clearOrg() {
+      this.$refs['orgForm'].resetFields()
       this.organization = Object.assign({}, this.source.organization)
     },
     handleRowPoint(row) {
