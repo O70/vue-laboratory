@@ -3,7 +3,7 @@
     <canvas id="c"/>
 
     <div class="el-add">
-      <el-button type="primary" icon="el-icon-plus" circle @click="openEdit"/>
+      <el-button type="primary" icon="el-icon-plus" circle @click="openForm"/>
     </div>
 
     <div v-if="buildings.length > 0">
@@ -45,7 +45,7 @@
                     </div>
                     <el-button slot="reference" type="primary" icon="el-icon-edit" size="mini" circle class="mb"/>
                   </el-popover>-->
-                  <el-button type="primary" icon="el-icon-edit" size="mini" circle class="mb" @click="openEdit(r * layout.cols + c)"/>
+                  <el-button type="primary" icon="el-icon-edit" size="mini" circle class="mb" @click="openForm(r * layout.cols + c)"/>
                 </el-tooltip>
                 <el-tooltip content="坐标集" placement="top">
                   <el-popover
@@ -84,8 +84,8 @@
       </el-row>
     </div>
 
-    <el-dialog :visible.sync="form.visible" :title="form.title || 'None'" width="90%">
-      <map-form v-model="form.value" :max-height="layout.canvasWidth"/>
+    <el-dialog :visible.sync="form.visible" :title="form.title || 'None'" width="90%" @close="resetForm">
+      <map-form ref="mapForm" v-model="form.value" :max-height="layout.canvasWidth"/>
     </el-dialog>
   </div>
 </template>
@@ -160,42 +160,16 @@ export default {
     },
     addBuilding(scene, item) {
       const areaPts = []
-      // item.points.forEach(it => { areaPts.push(new THREE.Vector2(it.x, it.y)) })
+      if (item.points.length === 0) return
 
-      // const { x: fx, y: fy } = item.points[0]
-      // console.info(item.points.map(t => t.x), Math.max(...item.points.map(t => t.x)), Math.min(...item.points.map(t => t.x)))
-      // item.points.map(t => {
-      //   console.info(typeof t.x)
-      //   return t.x
-      // })
-      // const np = item.points.map(({ x, y }) => {
-      //   return { x: x - fx, y: y - fy }
-      // })
       item.points.forEach(it => {
-        // np.forEach(it => {
-        // areaPts.push(new THREE.Vector2(it.x - fx, it.y - fy))
         areaPts.push(new THREE.Vector2(it.x, it.y))
       })
-      // areaPts.push(new THREE.Vector2(-100, 100))
-      // areaPts.push(new THREE.Vector2(100, 100))
-      // areaPts.push(new THREE.Vector2(100, -100))
-      // areaPts.push(new THREE.Vector2(-100, -100))
 
       const shapeGeometry = new THREE.ShapeBufferGeometry(new THREE.Shape(areaPts))
       const shapeMaterial = new THREE.MeshBasicMaterial({ color: this.colors.region, wireframe: false })
       const shape = new THREE.Mesh(shapeGeometry, shapeMaterial)
-      // shape.scale = new THREE.Vector3(1, 1, 1)
-      // shape.scale.x = 2
-      // shape.scale.y = 2
       shape.scale.set(2, 2, 1)
-      // console.info(shape.scale)
-      // shape.normalize()
-      // shape.position.x = -(Math.max(...np.map(t => t.x)) - Math.min(...np.map(t => t.x))) / 2
-      // shape.position.y = -(Math.max(...np.map(t => t.y)) - Math.min(...np.map(t => t.y))) / 2
-      // shape.position.x = -fx
-      // shape.position.y = -fy
-      // shape.translateX(-fx)
-      // shape.translateY(-fy)
       const xs = item.points.map(t => t.x)
       const maxX = Math.max(...xs)
       const minX = Math.min(...xs)
@@ -204,8 +178,6 @@ export default {
       const minY = Math.min(...ys)
       shape.translateX(-(minX + ((maxX - minX) / 2)) * 2)
       shape.translateY(-(minY + ((maxY - minY) / 2)) * 2)
-      // shape.position.x = -(minX + ((maxX - minX) / 2))
-      // shape.position.y = -(minY + ((maxY - minY) / 2))
       scene.add(shape)
     },
     updateSize() {
@@ -259,10 +231,14 @@ export default {
         this.renderer.render(scene, camera)
       })
     },
-    openEdit(index) {
+    openForm(index) {
       this.form.visible = true
       this.form.value = this.buildings[index]
-      this.form.title = this.form.value.name
+      this.form.title = this.form.value ? this.form.value.name : null
+    },
+    resetForm() {
+      this.$refs.mapForm.clearPoint()
+      this.$refs.mapForm.clearOrg()
     },
     remove(ind) {
       this.buildings[ind].visible = false
