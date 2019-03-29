@@ -10,8 +10,8 @@
             <el-input v-model="building.name" placeholder="名称" size="small" style="width: 340px;"/>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" icon="el-icon-check" size="mini" circle/>
-            <el-button type="info" icon="el-icon-back" size="mini" circle/>
+            <el-button type="primary" icon="el-icon-check" size="mini" circle @click="save"/>
+            <el-button type="info" icon="el-icon-back" size="mini" circle @click="reset"/>
           </el-form-item>
         </el-form>
       </el-col>
@@ -75,7 +75,7 @@ export default {
     value: {
       type: Object,
       default() {
-        return {}
+        return { id: null, name: null, sort: 0, points: [], organizations: [] }
       }
     },
     maxHeight: {
@@ -84,19 +84,37 @@ export default {
     }
   },
   data() {
+    const { id, name, sort } = this.value
     return {
-      building: {},
-      points: [],
+      building: { id, name, sort },
       point: {},
-      organizations: [],
       organization: {}
     }
   },
-  created() {
-    const { points, organizations, ...building } = this.value
-    this.building = building
-    this.points = points
-    this.organizations = organizations
+  computed: {
+    points() {
+      return this.value.points
+    },
+    organizations() {
+      return this.value.organizations
+    }
+  },
+  watch: {
+    value() {
+      const { id, name, sort } = this.value
+      this.building = { id, name, sort }
+    }
+  },
+  methods: {
+    save() {
+      // Map TODO
+      this.$message('Save Building')
+    },
+    reset() {
+      const { name, sort } = this.value
+      this.building.name = name
+      this.building.sort = sort
+    }
   }
 }
 </script>

@@ -84,8 +84,8 @@
       </el-row>
     </div>
 
-    <el-dialog :visible.sync="dialogVisible" :title="dialogTitle || 'None'" width="80%">
-      <map-form v-model="formObject" :max-height="layout.canvasWidth"/>
+    <el-dialog :visible.sync="form.visible" :title="form.title || 'None'" width="80%">
+      <map-form v-model="form.value" :max-height="layout.canvasWidth"/>
     </el-dialog>
   </div>
 </template>
@@ -120,9 +120,11 @@ export default {
         region: 0x343c47
       },
       buildings,
-      dialogVisible: false,
-      dialogTitle: null,
-      formObject: {}
+      form: {
+        visible: false,
+        title: null,
+        value: null
+      }
     }
   },
   created() {
@@ -258,9 +260,9 @@ export default {
       })
     },
     openEdit(index) {
-      this.dialogVisible = true
-      this.formObject = this.buildings[index]
-      this.dialogTitle = this.formObject.name
+      this.form.visible = true
+      this.form.value = this.buildings[index]
+      this.form.title = this.form.value.name
     },
     remove(ind) {
       this.buildings[ind].visible = false
