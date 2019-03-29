@@ -16,10 +16,11 @@
         </el-form>
       </el-col>
     </el-row>
-    <div v-show="value.id">
+    <!--<div v-show="value.id">-->
+    <div>
       <el-row :gutter="20">
         <el-col :span="10">
-          <el-form ref="pointForm" :inline="true" :model="point" :rules="rules">
+          <el-form ref="pointForm" :disabled="!building.id" :inline="true" :model="point" :rules="rules">
             <el-form-item prop="sort">
               <el-input v-model.number="point.sort" placeholder="序号" size="small" style="width: 60px;"/>
             </el-form-item>
@@ -52,7 +53,7 @@
           </el-table>
         </el-col>
         <el-col :span="14">
-          <el-form ref="orgForm" :inline="true" :model="organization" :rules="rules">
+          <el-form ref="orgForm" :disabled="!building.id" :inline="true" :model="organization" :rules="rules">
             <el-form-item prop="sort">
               <el-input v-model.number="organization.sort" placeholder="序号" size="small" style="width: 60px;"/>
             </el-form-item>
