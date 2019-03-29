@@ -84,7 +84,7 @@
       </el-row>
     </div>
 
-    <el-dialog :visible.sync="form.visible" :title="form.title || 'None'" width="80%">
+    <el-dialog :visible.sync="form.visible" :title="form.title || 'None'" width="90%">
       <map-form v-model="form.value" :max-height="layout.canvasWidth"/>
     </el-dialog>
   </div>

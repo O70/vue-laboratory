@@ -480,10 +480,14 @@ buildings.forEach((b, bi) => {
   b.sort = bi + 1
 
   b.points.forEach((p, pi) => {
+    p.id = `point${pi}`
+    p.bid = b.id
     p.sort = pi + 1
   })
 
   b.organizations.forEach((p, pi) => {
+    p.id = `org${pi}`
+    p.bid = b.id
     p.sort = pi + 1
   })
 })
