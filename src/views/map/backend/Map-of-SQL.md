@@ -1,7 +1,15 @@
-Map of SQL
+# 院区地图
 
-- Create Table
+## 坐标来源
+
+建筑坐标来源于院内平面设计图(CAD制图)，建议保存**源图(pdf格式)**。
+
+**图内建筑坐标提取，必须严格按照顺时针或逆时针方向进行提取。**
+
+## Create Table
+
 ```
+# 建筑表
 DROP TABLE IF EXISTS tbl_map_building;
 CREATE TABLE tbl_map_building (
   id VARCHAR(64) NOT NULL,
@@ -9,6 +17,7 @@ CREATE TABLE tbl_map_building (
   sort int
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
+# 坐标表
 DROP TABLE IF EXISTS tbl_map_point;
 CREATE TABLE tbl_map_point (
   id VARCHAR(64) NOT NULL,
@@ -18,6 +27,7 @@ CREATE TABLE tbl_map_point (
   sort int
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
+# 建筑内组织机构表
 DROP TABLE IF EXISTS tbl_map_org;
 CREATE TABLE tbl_map_org (
   id VARCHAR(64) NOT NULL,
@@ -29,7 +39,9 @@ CREATE TABLE tbl_map_org (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 ```
 
-- Insert Data
+## Insert Data
+
+- 初始化数据(**必需**)
 ```
 INSERT INTO tbl_map_building(id, name, sort) VALUE
   (replace(uuid(), '-', ''), '数据中心', 1),
@@ -373,7 +385,10 @@ INSERT INTO tbl_map_point(id, bid, x, y, sort) VALUE
   (replace(uuid(), '-', ''), (SELECT id FROM tbl_map_building WHERE sort = 25), 301.68, 888.6217, 2),
   (replace(uuid(), '-', ''), (SELECT id FROM tbl_map_building WHERE sort = 25), 305.46, 779.0017, 3),
   (replace(uuid(), '-', ''), (SELECT id FROM tbl_map_building WHERE sort = 25), 288.9, 778.4617, 4);
+```
 
+- 测试数据
+```
 INSERT INTO tbl_map_org(id, bid, name, shortName, location, sort) VALUE
   (replace(uuid(), '-', ''), (SELECT id FROM tbl_map_building WHERE sort = 1), '计算机应用研究所', '计算所', '404', 1),
   (replace(uuid(), '-', ''), (SELECT id FROM tbl_map_building WHERE sort = 1), '综合应用研究部', '综合部', '402', 2),
@@ -382,3 +397,5 @@ INSERT INTO tbl_map_org(id, bid, name, shortName, location, sort) VALUE
   (replace(uuid(), '-', ''), (SELECT id FROM tbl_map_building WHERE sort = 3), '计算机应用研究所', '计算所', '444', 1),
   (replace(uuid(), '-', ''), (SELECT id FROM tbl_map_building WHERE sort = 10), '院办公室', '院办', '506', 1);
 ```
+
+**建筑内的组织机构信息尚待收集**
