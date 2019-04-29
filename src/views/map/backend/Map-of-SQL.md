@@ -387,7 +387,7 @@ INSERT INTO tbl_map_point(id, bid, x, y, sort) VALUE
   (replace(uuid(), '-', ''), (SELECT id FROM tbl_map_building WHERE sort = 25), 288.9, 778.4617, 4);
 ```
 
-- 测试数据
+- 组织机构数据
 ```
 INSERT INTO tbl_map_org(id, bid, name, shortName, location, sort) VALUE
   (replace(uuid(), '-', ''), (SELECT id FROM tbl_map_building WHERE sort = 24), '北京市瑞德石油新技术有限公司', '北京市瑞德石油新技术有限公司', '2层', 1),
