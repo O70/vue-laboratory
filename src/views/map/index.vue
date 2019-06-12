@@ -42,8 +42,10 @@ export default {
       },
       colors: {
         background: 0x414a58,
-        region: 0x343c47,
-        selected: 0x2b333b
+        // region: 0x343c47,
+        // selected: 0x2b333b
+        region: 0xcad6f5,
+        selected: 0xcaf5d6
       }
     }
   },
@@ -94,7 +96,7 @@ export default {
       //   + ': ' + (window.innerWidth / (window.innerWidth / window.innerHeight)))
       const t = window.innerWidth / window.innerHeight
       // alert(t * (window.innerWidth / 3) + ', ' + ((window.innerWidth / 3) / t))
-      alert(((window.innerWidth / 3) / t))
+      // alert(((window.innerWidth / 3) / t))
       // alert(-(window.innerWidth / 5))
       // alert(window.innerWidth / window.innerHeight)
       // this.three.group.position.x = -(window.innerWidth / 5)
