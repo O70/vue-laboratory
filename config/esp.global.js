@@ -9,9 +9,9 @@ console.info('gh', gh)
 
 module.exports = {
   GATEWAY_HOST: gh,
-  FILE_PREFIX: `${gh}/api/fs`,
+  API_FS: `${gh}/api/fs`,
   FILE_PATH_ABS(relative_path = '') {
     const has = relative_path.includes('http://') || relative_path.includes('https://')
-    return has ? relative_path : `${this.FILE_PREFIX}${relative_path}`
+    return has ? relative_path : `${this.API_FS}${relative_path}`
   }
 }
