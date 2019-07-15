@@ -12,7 +12,7 @@ RUN rm -rf /etc/nginx/conf.d/*
 
 COPY nginx.template /etc/nginx/nginx.template
 
-ENV ESP_GATEWAY_HOST df.gateway.com
+ENV ESP_GATEWAY_HOST 10.10.0.154:8765
 
 CMD envsubst '$ESP_GATEWAY_HOST' < /etc/nginx/nginx.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'
 

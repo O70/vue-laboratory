@@ -78,6 +78,9 @@ export default {
       immediate: true
     }
   },
+  created() {
+    console.info('login: ', this.$gv)
+  },
   methods: {
     showPwd() {
       if (this.pwdType === 'password') {

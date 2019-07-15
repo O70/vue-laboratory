@@ -15,6 +15,9 @@ export default {
       'name',
       'roles'
     ])
+  },
+  created() {
+    console.info('dashboard: ', this.$gv)
   }
 }
 </script>
