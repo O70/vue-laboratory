@@ -4,6 +4,8 @@
 
 const path = require('path')
 
+console.info('Proxy table Gateway host: ', require('./esp.global').GATEWAY_HOST)
+
 module.exports = {
   dev: {
     // Paths

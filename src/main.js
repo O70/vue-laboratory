@@ -17,6 +17,8 @@ import '@/permission' // permission control
 
 Vue.use(ElementUI, { locale })
 
+Vue.prototype.$gv = require('../config/esp.global')
+
 Vue.config.productionTip = false
 
 new Vue({

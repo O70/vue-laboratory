@@ -1,11 +1,6 @@
 'use strict'
 
-console.info('process.env: ', process.env)
-console.info('NODE_ENV: ', process.env.NODE_ENV)
-console.info('ESP_GATEWAY_HOST:', process.env.ESP_GATEWAY_HOST)
-
 const gh = process.env.ESP_GATEWAY_HOST || 'http://gateway.host.com'
-console.info('gh', gh)
 
 module.exports = {
   GATEWAY_HOST: gh,
