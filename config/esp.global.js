@@ -2,6 +2,7 @@
 
 const gh = process.env.ESP_GATEWAY_HOST || 'http://gateway.host.com'
 
+console.info('global')
 module.exports = {
   GATEWAY_HOST: gh,
   API_FS: `${gh}/api/fs`,
