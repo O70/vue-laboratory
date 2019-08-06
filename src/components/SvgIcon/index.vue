@@ -22,11 +22,7 @@ export default {
       return `#icon-${this.iconClass}`
     },
     svgClass() {
-      if (this.className) {
-        return 'svg-icon ' + this.className
-      } else {
-        return 'svg-icon'
-      }
+      return `svg-icon ${this.className}`
     }
   }
 }

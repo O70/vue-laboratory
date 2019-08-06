@@ -2,7 +2,7 @@
 
 const GATEWAY_HOST = process.env.ESP_GATEWAY_HOST || 'http://gateway.host.com'
 
-console.info('global', GATEWAY_HOST)
+// console.info('global', GATEWAY_HOST)
 module.exports = {
   SYS_NAME: process.env.ESP_SYS_NAME,
   GATEWAY_HOST,

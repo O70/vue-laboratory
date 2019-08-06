@@ -66,13 +66,24 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/three.js',
+    path: '/three',
     component: Layout,
     children: [
       {
         path: 'index',
         component: () => import('@/views/threejs/index'),
         meta: { title: 'Three.js', icon: 'example' }
+      }
+    ]
+  },
+  {
+    path: '/icons',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/icons/index'),
+        meta: { title: 'Icons', icon: 'example' }
       }
     ]
   },
