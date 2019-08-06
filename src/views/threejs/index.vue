@@ -26,7 +26,7 @@
 </template>
 <style rel="stylesheet/scss" lang="scss">
   body {
-    background-color: #414a58;
+    /*background-color: #414a58;*/
   }
   .el-row {
     margin-bottom: 20px;

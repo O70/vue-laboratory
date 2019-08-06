@@ -66,6 +66,19 @@ export const constantRouterMap = [
   },
 
   {
+    path: '/three.js',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/threejs/index'),
+        meta: { title: 'Three.js', icon: 'example' }
+      }
+    ]
+  },
+
+  /*
+  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',
@@ -168,6 +181,7 @@ export const constantRouterMap = [
       }
     ]
   },
+  */
 
   { path: '*', redirect: '/404', hidden: true }
 ]
