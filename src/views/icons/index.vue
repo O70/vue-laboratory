@@ -3,8 +3,9 @@
     <svg-icon icon-class="tree" class-name="is"/>
     <svg-icon icon-class="table" class-name="is"/>
     <svg-icon icon-class="link" class-name="is"/>
+    <svg-icon icon-class="test" class-name="is"/>
 
-    <img src="http://10.10.0.242:8083/svg/app-7.svg">
+    <!--<img src="http://10.10.0.242:8083/svg/app-7.svg">-->
   </div>
 </template>
 <script>
