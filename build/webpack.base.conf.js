@@ -1,4 +1,6 @@
 'use strict'
+require('./icon-loader')()
+
 const path = require('path')
 const utils = require('./utils')
 const config = require('../config')

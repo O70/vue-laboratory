@@ -1,60 +1,69 @@
 import Vue from 'vue'
-import SvgIcon from '@/components/SvgIcon' // svg组件
+import SvgIcon from '@/components/SvgIcon'
+// import svgss from './get-svg'
+// const http = require('http')
 
 // register globally
 Vue.component('svg-icon', SvgIcon)
 
 // const requireAll = requireContext => requireContext.keys().map(requireContext)
-const req = require.context('./svg', false, /\.svg$/)
+const req = require.context('./svg', true, /\.svg$/)
 // requireAll(req)
 req.keys().map(req)
-
-// const querystring = require('querystring')
-// const postData = querystring.stringify({
-//   'msg': 'Hello World!'
+// const svgs = req.keys().map(req)
+// console.info(require('./get-svg'), Object.keys(require('./get-svg')))
+// svgs.forEach(it => {
+//   // console.info(it, Object.keys(it), Object.keys(it.default), it.default.content)
 // })
 //
-const http = require('http')
-// const req1 = http.request({
-//   hostname: 'http://10.10.0.242',
-//   port: '8083',
-//   path: '/svg/app-7.svg',
-//   headers: {
-//     'Access-Control-Allow-Origin': '*',
-//     'Access-Control-Allow-Headers': 'X-Requested-With',
-//     'Access-Control-Allow-Methods': '*'
-//   }
-// }, (res) => {
-//   console.info(res)
-// })
+// // console.info(svgs)
+// // console.info(require('./get-svg'))
 //
-// req1.on('error', (e) => {
-//   console.error(`problem with request: ${e.message}`)
-// })
+// function getSvgs() {
+//   return new Promise((resolve, reject) => {
+//     http.get('http://10.10.0.242:8083/svg/app-7.svg', (res) => {
+//       // console.info(res)
+//       // res.header('Access-Control-Allow-Origin', '*')
 //
-// // Write data to request body
-// req1.write(postData)
-// req1.end()
-// console.info(postData)
+//       res.setEncoding('utf8')
+//
+//       let rawData = ''
+//       res.on('data', (chunk) => { rawData += chunk })
+//
+//       res.on('end', () => {
+//         try {
+//           // const parsedData = JSON.parse(rawData)
+//           // console.log(parsedData)
+//           // console.log(typeof rawData)
+//           resolve(rawData)
+//           // require('fs').writeFile('./svgs/test.svg', rawData, err => {
+//           //   console.info(err)
+//           // })
+//           // const svg = eval(rawData)
+//           // console.info(svg)
+//         } catch (e) {
+//           console.error(e.message)
+//           reject()
+//         }
+//       })
+//     }).on('error', (e) => {
+//       console.error(`Got error: ${e.message}`)
+//       reject()
+//     })
+//   })
+// }
+//
+// let svgs1 = null
+// async function setSvgs() {
+//   svgs1 = await getSvgs()
+//   console.info(typeof svgs1)
+// }
+//
+// setSvgs()
 
-http.get('http://10.10.0.242:8083/svg/app-7.svg', (res) => {
-  console.info(res)
-  // res.header('Access-Control-Allow-Origin', '*')
+// import sg from '@/icons/svg/eye.svg'
+// console.info(sg)
 
-  res.setEncoding('utf8')
-
-  let rawData = ''
-  res.on('data', (chunk) => { rawData += chunk })
-
-  res.on('end', () => {
-    try {
-      // const parsedData = JSON.parse(rawData)
-      // console.log(parsedData)
-      console.log(rawData)
-    } catch (e) {
-      console.error(e.message)
-    }
-  })
-}).on('error', (e) => {
-  console.error(`Got error: ${e.message}`)
-})
+// require('../../build/icon-loader')()
+// import a from '../../build/icon-loader'
+// a()

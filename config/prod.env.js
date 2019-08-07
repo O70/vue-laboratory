@@ -1,6 +1,6 @@
 'use strict'
 
-console.info('prod', require('./esp.global').GATEWAY_HOST)
+// console.info('prod', require('./esp.global').GATEWAY_HOST)
 module.exports = {
   NODE_ENV: '"production"',
   ESP_SYS_NAME: `"${process.env['npm_package_name']}"`,
