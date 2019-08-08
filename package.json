@@ -8,7 +8,7 @@
     "dev": "webpack-dev-server --inline --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "build": "node build/build.js",
-    "build:esp": "ESP_GATEWAY_HOST=https://www.baidus.com node build/build.js ; export -n ESP_GATEWAY_HOST",
+    "build:vl": "ESP_GATEWAY_HOST=http://10.10.0.242:8090 node build/build.js ; export -n ESP_GATEWAY_HOST",
     "build:report": "npm_config_report=true npm run build",
     "lint": "eslint --ext .js,.vue src",
     "test": "npm run lint",
