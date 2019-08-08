@@ -1,26 +1,50 @@
 <template>
   <div class="app-container">
-    <svg-icon icon-class="tree" class-name="is"/>
-    <svg-icon icon-class="table" class-name="is"/>
-    <svg-icon icon-class="link" class-name="is"/>
-    <svg-icon icon-class="test" class-name="is"/>
 
-    <!--<img src="http://10.10.0.242:8083/svg/app-7.svg">-->
+    <div class="svg-container">
+      <div v-for="it in svgList" :key="it" class="svg-item">
+        <div>
+          <svg-icon :icon-class="it" class-name="is"/>
+        </div>
+        <label>{{ it }}</label>
+      </div>
+    </div>
+
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
+      svgList: []
     }
+  },
+  created() {
+    const keys = require.context('@/icons/svg', true, /\.svg$/).keys()
+    this.svgList = keys.map(it => it.replace(/\.svg/, '').split('/').pop()).sort()
   }
 }
 </script>
 <style scoped>
+.svg-container {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  align-content: center;
+  -webkit-align-content: center;
+}
+.svg-item {
+  width: 130px;
+  text-align: center;
+}
 .is {
   width: 5em;
   height: 5em;
   margin: 10px;
-  color: brown;
+  cursor: pointer;
+  /*color: brown;*/
 }
 </style>

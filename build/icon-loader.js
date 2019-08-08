@@ -8,17 +8,22 @@ const http = require('http')
 const path = require('path')
 const fs = require('fs')
 
+const host = require('../config/esp.global').GATEWAY_HOST
 const dir = path.join(__dirname, '..', '/src/icons/svg/remote/')
 
-fs.access(dir, fs.constants.W_OK, err => {
-  console.log(`${dir} ${err ? 'does not exist' : 'exist'}`)
+module.exports = () => {
+  fs.access(dir, fs.constants.W_OK, err => {
+    console.log(`${dir} ${err ? 'does not exist' : 'exist'}`)
 
-  err && fs.mkdir(dir, {}, err =>
-    console.log(`${dir} create ${err ? `failed:\n ${err}` : 'success'}`))
-})
+    if (!err) {
+      fs.readdir(dir, {}, (err, files = []) => files.forEach(it => fs.unlinkSync(`${dir}${it}`)))
+    }
 
-module.exports =  () => {
-  http.get('http://10.10.0.242:8083/svg/app-7.svg', res => {
+    err && fs.mkdir(dir, {}, err =>
+      console.log(`${dir} create ${err ? `failed:\n ${err}` : 'success'}`))
+  })
+
+  http.get(`${host}/svg/list`, res => {
     res.setEncoding('utf8')
 
     let rawData = ''
@@ -26,15 +31,17 @@ module.exports =  () => {
     res.on('data', chunk => { rawData += chunk })
 
     res.on('end', () => {
-      fs.writeFile(`${dir}test.svg`, rawData, err => {
-        if (err) {
-          console.error(`Failed to write file: ${err}`)
-        } else {
-          console.log('The file has been saved!')
-        }
+      (JSON.parse(rawData) || []).forEach(it => {
+        fs.writeFile(`${dir}${it.name}`, it.content, err => {
+          if (err) {
+            console.error(`Failed to write file: ${err}`)
+          } else {
+            console.log('The file[%s] has been saved.', it.name)
+          }
+        })
       })
     })
   }).on('error', e => {
-    console.error(`Got icon error: ${e.message}`)
+    console.error('Got icon error: %s', e.message)
   })
 }

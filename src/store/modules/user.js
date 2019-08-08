@@ -65,7 +65,7 @@ const user = {
         const data = { name: 'admin', roles: ['admin'] }
         commit('SET_ROLES', data.roles)
         commit('SET_NAME', data.name)
-        commit('SET_AVATAR', 'http://localhost:8090/svg/office.svg')
+        commit('SET_AVATAR', 'https://avatar.gitee.com/uploads/82/1542182_Guiwang.png!avatar100?1563158493')
         resolve()
       })
     },
