@@ -84,6 +84,7 @@ const user = {
 
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
+        removeToken()
         resolve()
       })
     },
