@@ -87,6 +87,17 @@ export const constantRouterMap = [
       }
     ]
   },
+  {
+    path: '/files',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/files/index'),
+        meta: { title: 'Files', icon: 'example' }
+      }
+    ]
+  },
 
   /*
   {

@@ -10,6 +10,13 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
+      '/api/fs': {
+        target: 'http://localhost:8031',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/fs': '/'
+        }
+      },
       '/jwt': {
         target: 'https://easy-mock.com/mock/5950a2419adc231f356a6636/vue-admin',
         changeOrigin: true,
