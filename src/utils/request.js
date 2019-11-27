@@ -30,7 +30,7 @@ service.interceptors.response.use(
     /**
      * code为非20000是抛错 可结合自己业务进行修改
      */
-    console.log(response)
+    console.log('request response: ', response)
     const res = response.data
     if (res.code === undefined) {
       return response.data
@@ -66,7 +66,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
+    console.error('err' + error) // for debug
     Message({
       message: error.message,
       type: 'error',
