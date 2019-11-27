@@ -1,9 +1,13 @@
 <template>
   <div class="app-container">
-      <el-button type="primary" @click="downloadPost">Downlaod Archive(POST)</el-button>
-      <el-button type="warning" @click="downloadGet">Downlaod Archive(GET)</el-button>
-      <a :href="href1">Download(No Name)</a>
-      <a :href="href2">Download(Has Name)</a>
+      <el-row>
+        <el-button type="primary" @click="downloadPost">Downlaod Archive(POST)</el-button>
+        <el-button type="warning" @click="downloadGet">Downlaod Archive(GET)</el-button>
+      </el-row>
+      <el-row>
+        <el-link type="primary" icon="el-icon-download" :href="href1">Download(No Name)</el-link>
+        <el-link type="warning" icon="el-icon-download" :href="href2">Download(Has Name)</el-link>
+      </el-row>
   </div>
 </template>
 <script>
@@ -91,8 +95,13 @@ export default {
       console.log(response)
       console.log(new Blob([response]))
 
-      let url = window.URL.createObjectURL(new Blob([response]))
-      let link = document.createElement('a')
+      // ie
+      // window.navigator.msSaveOrOpenBlob && 
+      // navigator.msSaveBlob(new Blob([response]), filename)
+      
+      // chrome/firefox
+      const url = window.URL.createObjectURL(new Blob([response]))
+      const link = document.createElement('a')
       link.style.display = 'none'
       link.href = url
       link.setAttribute('download', 'xxx.zip')
@@ -103,3 +112,14 @@ export default {
   }
 }
 </script>
+<style>
+  .el-row {
+    margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  .el-col {
+    border-radius: 4px;
+  }
+</style>
