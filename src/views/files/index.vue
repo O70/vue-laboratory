@@ -2,7 +2,8 @@
   <div class="app-container">
       <el-row>
         <el-button type="primary" @click="downloadPost">Downlaod Archive(POST)</el-button>
-        <el-button type="primary" @click="downloadPostV2">Downlaod Archive(POST V2)</el-button>
+        <el-button type="danger" @click="downloadPostFinal">Downlaod Archive(POST) Final</el-button>
+        <!-- <el-button type="primary" @click="downloadPostV2">Downlaod Archive(POST V2)</el-button> -->
         <el-button type="warning" @click="downloadGet">Downlaod Archive(GET)</el-button>
       </el-row>
       <el-row>
@@ -58,6 +59,33 @@ export default {
           data: files
       }).then(res => this.download(res)).catch(err => {
         console.error('download post:', err)
+      })
+    },
+    downloadPostFinal() {
+      const files = []
+      // this.ids.forEach((val, ind) => files.push({ id: val }))
+      // this.ids.forEach((val, ind) => files.push({ id: val, fileName: ind % 2 === 0 ? `fileName-post${ind}`: null }))
+
+      fetch({
+          url: '/api/fs/file/download/archive',
+          method: 'post',
+          responseType: 'arraybuffer',
+          data: files,
+          tips: false
+      }).then(res => {
+        console.log(res)
+
+        try {
+          const dataView = new DataView(res);
+          const decoder = new TextDecoder('utf-8')
+          const coder = decoder.decode(dataView)
+          const data = JSON.parse(coder)
+          console.log(data)
+        } catch(e) {
+          console.log(e)
+        }
+      }).catch(err => {
+        console.log('gui: ', err)
       })
     },
     downloadPostV2() {
@@ -188,10 +216,11 @@ export default {
       // console.log(String.fromCharCode.apply(null, new Uint8Array(response)))
       // console.log(String.fromCharCode.apply(null, new Uint16Array(response)))
       // console.log(new TextDecoder('utf-8').decode(response))
-      const a = String.fromCharCode.apply(null, new Uint8Array(response))
-      console.log(a)
-      const b = decodeURIComponent(escape(a))
-      console.log(b)
+
+      // const a = String.fromCharCode.apply(null, new Uint8Array(response))
+      // console.log(a)
+      // const b = decodeURIComponent(escape(a))
+      // console.log(b)
 
       // // const blob = new Blob([response], { type: 'application/octet-stream' })
       // const blob = new Blob([response], { type: 'text/plain' })
