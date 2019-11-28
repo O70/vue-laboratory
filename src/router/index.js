@@ -89,12 +89,19 @@ export const constantRouterMap = [
   },
   {
     path: '/files',
+    name: 'Files',
+    meta: { title: 'Files', icon: 'example' },
     component: Layout,
     children: [
       {
+        path: 'index/test',
+        component: () => import('@/views/files/index-test'),
+        meta: { title: 'Download Test', icon: 'example' }
+      },
+      {
         path: 'index',
         component: () => import('@/views/files/index'),
-        meta: { title: 'Files', icon: 'example' }
+        meta: { title: 'Download Prod', icon: 'example' }
       }
     ]
   },
