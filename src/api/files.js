@@ -47,16 +47,15 @@ const download = {
           const blob = new Blob([res])
           care ? resolve(blob) : (() => {
             // chrome/firefox
-            // const url = window.URL.createObjectURL(new Blob([res]))
-            // const link = document.createElement('a')
-            // link.style.display = 'none'
-            // link.href = url
-            // link.setAttribute('download', 'xxx.zip')
-            // document.body.appendChild(link)
-            // link.click()
-            // URL.revokeObjectURL(link.href)
-            // link.remove()
-            console.debug('download archive...', e)
+            const url = window.URL.createObjectURL(new Blob([res]))
+            const link = document.createElement('a')
+            link.style.display = 'none'
+            link.href = url
+            link.setAttribute('download', `${name || Date.parse(new Date())}.zip`)
+            document.body.appendChild(link)
+            link.click()
+            URL.revokeObjectURL(link.href)
+            link.remove()
           })()
         }
       })

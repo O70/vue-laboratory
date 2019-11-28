@@ -76,10 +76,12 @@ export default {
   },
   methods: {
     archivePost() {
-      download.archive({ files: this.files.posts })
+      // download.archive({ files: this.files.posts })
+      download.archive({ files: this.files.posts, name: 'post下载' })
     },
     archiveGet() {
-      download.archive({ files: this.files.gets, method: 'get' })
+      // download.archive({ files: this.files.gets, method: 'get' })
+      download.archive({ files: this.files.gets, method: 'get', name: 'get下载' })
     },
     archivePostCare() {
       download.archive({
