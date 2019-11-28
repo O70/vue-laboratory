@@ -1,12 +1,37 @@
 <template>
   <div class="app-container">
     <el-row>
-      <el-button type="primary" @click="archivePost">POST - Downlaod Archive</el-button>
-      <el-button type="warning">GET - Downlaod Archive</el-button>
+      <el-card>
+        <div slot="header" class="clearfix">
+          <strong>Default</strong>
+        </div>
+        <div>
+          <el-button type="primary" @click="archivePost">POST - Downlaod Archive</el-button>
+          <el-button type="warning" @click="archiveGet">GET - Downlaod Archive</el-button>
+        </div>
+      </el-card>
     </el-row>
     <el-row>
-      <el-link :href="hrefs.link1" type="primary" icon="el-icon-download">Download(No Name)</el-link>
-      <el-link :href="hrefs.link2" type="warning" icon="el-icon-download">Download(Has Name)</el-link>
+      <el-card>
+        <div slot="header" class="clearfix">
+          <strong>Care</strong>
+        </div>
+        <div>
+          <el-button type="primary" @click="archivePostCare">POST - Downlaod Archive</el-button>
+          <el-button type="warning" @click="archiveGetCare">GET - Downlaod Archive</el-button>
+        </div>
+      </el-card>
+    </el-row>
+    <el-row>
+      <el-card>
+        <div slot="header" class="clearfix">
+          <strong>Href</strong>
+        </div>
+        <div>
+          <el-link :href="hrefs.link1" type="primary" icon="el-icon-download">Download(No Name)</el-link>
+          <el-link :href="hrefs.link2" type="warning" icon="el-icon-download">Download(Has Name)</el-link>
+        </div>
+      </el-card>
     </el-row>
   </div>
 </template>
@@ -24,11 +49,20 @@ export default {
       '119022000583737344',
       '119022000852172800'
     ]
-    const posts = [], gets = []
+    const posts = []
+    const gets = []
     fids.forEach((val, ind) => {
       const m = ind % 2 === 0
       posts.push({ id: val, fileName: m ? `fileName-post${ind}` : null })
       gets.push(m ? `${val},fileName-get${ind}` : `${val}`)
+
+      // File not found
+      // posts.push({ id: val + '1', fileName: m ? `fileName-post${ind}` : null })
+      // gets.push(m ? `${val + '1'},fileName-get${ind}` : `${val + '1'}`)
+
+      // Params error
+      // posts.push({ id: ' ', fileName: m ? `fileName-post${ind}` : null })
+      // gets.push(m ? `${' '},fileName-get${ind}` : `${' '}`)
     })
     return {
       fids,
@@ -42,7 +76,37 @@ export default {
   },
   methods: {
     archivePost() {
-      console.log('post')
+      download.archive({ files: this.files.posts })
+    },
+    archiveGet() {
+      download.archive({ files: this.files.gets, method: 'get' })
+    },
+    archivePostCare() {
+      download.archive({
+        files: this.files.posts,
+        care: true
+      }).then(data => this.$notify({
+        title: 'POST Blob',
+        type: 'success',
+        message: `Blob size: ${data.size}`
+      })).catch(message => this.$notify.error({
+        title: 'POST Error',
+        message
+      }))
+    },
+    archiveGetCare() {
+      download.archive({
+        files: this.files.gets,
+        method: 'get',
+        care: true
+      }).then(data => this.$notify({
+        title: 'GET Blob',
+        type: 'success',
+        message: `Blob size: ${data.size}`
+      })).catch(message => this.$notify.error({
+        title: 'GET Error',
+        message
+      }))
     }
   }
 }

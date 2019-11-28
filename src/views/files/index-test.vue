@@ -38,7 +38,6 @@ export default {
 
     const params = []
     this.ids.forEach((val, ind) => params.push(ind % 2 === 0 ? `${val},fileName-get${ind}` : `${val}`))
-    console.log({ params })
     const p = qs.stringify({ params }, { indices: false })
     console.log(p)
 
