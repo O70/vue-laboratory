@@ -36,26 +36,38 @@ const download = {
         responseType: 'arraybuffer'
       }, cfg)).then(res => {
         try {
-          console.debug('ArrayBuffer: ', res)
-          const dataView = new DataView(res)
-          const decoder = new TextDecoder('utf-8')
-          const coder = decoder.decode(dataView)
-          const error = JSON.parse(coder)
+          let error = null
+          if ('TextDecoder' in window) {
+            const dataView = new DataView(res)
+            const decoder = new TextDecoder('utf-8')
+            const coder = decoder.decode(dataView)
+            error = JSON.parse(coder).message
+          } else {
+            // IE
+            const str = String.fromCharCode.apply(null, new Uint8Array(res))
+            error = decodeURIComponent(escape(JSON.parse(str).message))
+          }
 
-          care ? reject(error.message) : msgError(error.message)
+          care ? reject(error) : msgError(error)
         } catch (e) {
           const blob = new Blob([res])
+          const filename = `${name || Date.parse(new Date())}.zip`
           care ? resolve(blob) : (() => {
-            // chrome/firefox
-            const url = window.URL.createObjectURL(new Blob([res]))
-            const link = document.createElement('a')
-            link.style.display = 'none'
-            link.href = url
-            link.setAttribute('download', `${name || Date.parse(new Date())}.zip`)
-            document.body.appendChild(link)
-            link.click()
-            URL.revokeObjectURL(link.href)
-            link.remove()
+            if (window.navigator.msSaveOrOpenBlob) {
+              // IE
+              navigator.msSaveBlob(blob, filename)
+            } else {
+              // chrome/firefox
+              const url = window.URL.createObjectURL(new Blob([res]))
+              const link = document.createElement('a')
+              link.style.display = 'none'
+              link.href = url
+              link.setAttribute('download', filename)
+              document.body.appendChild(link)
+              link.click()
+              URL.revokeObjectURL(link.href)
+              link.remove()
+            }
           })()
         }
       })
