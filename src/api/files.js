@@ -9,14 +9,18 @@ const upload = {}
 const download = {
   /**
    * Download archive
-   * @param {Array} files
-   *        post: [{ id: xx, fileName: xx }, { id: yy, fileName: yy }, ...]
-   *        get: ['id-xx,fileName-xx', 'id-yy,fileName-yy', ...]
-   * @param {String} method <post(default) | get>
-   * @param {String} name Archive name
-   * @returns {Promise}
+   * @param {Object} config
+   * @example
+   *          post: [{ id: xx, fileName: xx }, { id: yy, fileName: yy }, ...]
+   *          get: ['id-xx,fileName-xx', 'id-yy,fileName-yy', ...]
+   * @param {Array} config.files
+   * @param {string} config.method <post(default) | get>
+   * @param {string} config.name Archive name
+   * @param {boolean} config.care default false
+   * @returns {Promise<any>}
    */
-  archive({ files = [], method = 'post', name = '', care = false }) {
+  archive(config) {
+    const { files = [], method = 'post', name = '', care = false } = config
     return new Promise((resolve, reject) => {
       if (!files || files.length < 1) {
         (m => care ? reject(m) : msgError(m))('参数为空')
