@@ -8,6 +8,7 @@
           </div>
           <div>
             <el-upload
+              :on-success="handleSuccess"
               drag
               action="/api/fs/upload"
               multiple>
@@ -21,6 +22,10 @@
         <el-card>
           <div slot="header">
             <b>One-time upload</b>
+            <el-button
+              style="float: right; padding: 3px 0"
+              type="text"
+              @click="submit">Submit</el-button>
           </div>
           <div>
             <el-upload
@@ -34,7 +39,6 @@
               <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
             </el-upload>
           </div>
-          <el-button type="primary" @click="submit">Submit</el-button>
         </el-card>
       </el-col>
     </el-row>
@@ -50,6 +54,9 @@ export default {
     }
   },
   methods: {
+    handleSuccess(response, file, list) {
+      console.log(response, file, list)
+    },
     handleRequest(file) {
       this.formData.append('files', file.file)
       // this.formData.set('file', file.file)
