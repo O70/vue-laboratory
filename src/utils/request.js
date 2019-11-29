@@ -28,10 +28,15 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     /**
-     * code为非20000是抛错 可结合自己业务进行修改
+     * code为非20000[200]是抛错 可结合自己业务进行修改
      */
+    console.log('success response: ', response)
     const res = response.data
-    if (res.code !== 20000) {
+    if (res.code === undefined) {
+      return response.data
+    }
+
+    if (res.code !== 200) {
       Message({
         message: res.message,
         type: 'error',
@@ -60,7 +65,8 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
+    console.log(JSON.stringify(error))
+    console.error('error response: ' + error) // for debug
     Message({
       message: error.message,
       type: 'error',
