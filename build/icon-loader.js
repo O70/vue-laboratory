@@ -43,7 +43,8 @@ module.exports = () => {
       res.on('end', () => {
         new Promise(resolve => {
           let res = { saved: [], errs: [] }
-          const rdata = JSON.parse(rawData) || []
+          // const rdata = JSON.parse(rawData) || []
+          const rdata = JSON.parse(rawData).data
           const lastInd = rdata.length - 1
 
           rdata.forEach((it, ind) => {
