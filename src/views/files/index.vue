@@ -86,14 +86,18 @@ export default {
     }
   },
   created() {
-    axios.get('/api/fs/file').then(({ data }) => {
-      console.log(data)
-      this.table.data = data.data
-    })
+    this.getList()
   },
   methods: {
+    getList() {
+      axios.get('/api/fs/file').then(({ data }) => {
+        console.log('success: ', data)
+        this.table.data = data.data
+      })
+    },
     handleSuccess(response, file, list) {
       console.log(response, file, list)
+      this.getList()
     },
     handleRequest(file) {
       this.formData.append('files', file.file)
@@ -108,6 +112,7 @@ export default {
         headers: { 'Content-Type': 'multipart/form-data' }
       }).then(res => {
         console.log(res)
+        this.getList()
       }).catch(err => {
         console.error('upload error: ' + err)
       })
