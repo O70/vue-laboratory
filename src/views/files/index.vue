@@ -1,58 +1,56 @@
 <template>
   <div class="app-container">
-    <el-row class="mb-20">
+    <el-row>
+      <el-col align="right">
+        <el-button-group>
+          <el-button type="primary" icon="el-icon-upload" @click="drawer = !drawer">Upload</el-button>
+          <el-button type="success" icon="el-icon-share">Archive</el-button>
+          <el-button type="danger" icon="el-icon-delete">Clear</el-button>
+        </el-button-group>
+      </el-col>
+    </el-row>
+    <el-row class="mt-10">
       <el-col>
         <el-table
           :data="table.data"
-          max-height="400"
+          max-height="700"
           border
           stripe>
           <el-table-column prop="name" label="Name"/>
           <el-table-column prop="contentType" label="Type" width="200"/>
           <el-table-column prop="suffix" label="Suffix" align="right" width="60"/>
-          <el-table-column prop="size" label="Size" align="right" width="100"/>
+          <el-table-column prop="size" label="Size" align="right" width="120"/>
           <el-table-column prop="path" label="Path"/>
           <el-table-column prop="createBy" label="Creator" align="center" width="120"/>
           <el-table-column prop="createTime" label="Time" align="center" width="180"/>
         </el-table>
       </el-col>
     </el-row>
-    <el-row :gutter="20">
-      <el-col :span="12">
-        <el-card>
+
+    <el-drawer
+      :visible.sync="drawer"
+      :with-header="false"
+      direction="rtl">
+      <div style="margin: 20px;">
+        <el-card shadow="hover">
           <div slot="header">
             <b>Default</b>
           </div>
-          <div>
-            <el-upload
-              :on-success="handleSuccess"
-              drag
-              action="/api/fs/file"
-              multiple>
-              <i class="el-icon-upload"/>
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            </el-upload>
-          </div>
+          <el-upload
+            :on-success="handleSuccess"
+            drag
+            action="/api/fs/file"
+            multiple>
+            <i class="el-icon-upload"/>
+            <div class="el-upload__text">Drag the file here, or <em>click upload</em></div>
+          </el-upload>
         </el-card>
-      </el-col>
-      <el-col :span="12">
-        <el-card>
+        <el-card shadow="hover" class="mt-10">
           <div slot="header">
             <b>One-time upload</b>
           </div>
           <div>
-            <el-upload
-              ref="upload"
-              :auto-upload="false"
-              :http-request="handleRequest"
-              drag
-              action=""
-              multiple>
-              <i class="el-icon-upload"/>
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            </el-upload>
-
-            <div class="mt-10">
+            <div>
               <el-select v-model="appName" placeholder="Select...">
                 <el-option
                   v-for="item in options"
@@ -65,10 +63,21 @@
                 type="primary"
                 @click="submit">Submit</el-button>
             </div>
+            <el-upload
+              ref="upload"
+              :auto-upload="false"
+              :http-request="handleRequest"
+              drag
+              action=""
+              multiple
+              class="mt-10">
+              <i class="el-icon-upload"/>
+              <div class="el-upload__text">Drag the file here, or <em>click upload</em></div>
+            </el-upload>
           </div>
         </el-card>
-      </el-col>
-    </el-row>
+      </div>
+    </el-drawer>
   </div>
 </template>
 <script>
@@ -82,7 +91,8 @@ export default {
       options: ['user', 'admin', 'order', 'supermarket'],
       table: {
         data: []
-      }
+      },
+      drawer: false
     }
   },
   created() {
