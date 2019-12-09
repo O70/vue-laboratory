@@ -4,7 +4,7 @@
       <el-col align="right">
         <el-button-group>
           <el-button type="primary" icon="el-icon-upload" @click="drawer = !drawer">Upload</el-button>
-          <el-button type="success" icon="el-icon-share">Archive</el-button>
+          <el-button type="success" icon="el-icon-download">Archive</el-button>
           <el-button type="danger" icon="el-icon-delete">Clear</el-button>
         </el-button-group>
       </el-col>
@@ -21,8 +21,18 @@
           <el-table-column prop="suffix" label="Suffix" align="right" width="60"/>
           <el-table-column prop="size" label="Size" align="right" width="120"/>
           <el-table-column prop="path" label="Path"/>
-          <el-table-column prop="createBy" label="Creator" align="center" width="120"/>
-          <el-table-column prop="createTime" label="Time" align="center" width="180"/>
+          <el-table-column prop="createBy" label="Creator" align="center" width="100"/>
+          <el-table-column prop="createTime" label="Time" align="center" width="160"/>
+          <el-table-column
+            fixed="right"
+            align="center"
+            label="Operations"
+            width="100">
+            <template slot-scope="scope">
+              <el-button type="success" icon="el-icon-download" circle size="mini"/>
+              <el-button type="danger" icon="el-icon-delete" circle size="mini"/>
+            </template>
+          </el-table-column>
         </el-table>
       </el-col>
     </el-row>
@@ -42,7 +52,7 @@
             action="/api/fs/file"
             multiple>
             <i class="el-icon-upload"/>
-            <div class="el-upload__text">Drag the file here, or <em>click upload</em></div>
+            <div class="el-upload__text">Drop file here or <em>click to upload</em></div>
           </el-upload>
         </el-card>
         <el-card shadow="hover" class="mt-10">
@@ -72,7 +82,7 @@
               multiple
               class="mt-10">
               <i class="el-icon-upload"/>
-              <div class="el-upload__text">Drag the file here, or <em>click upload</em></div>
+              <div class="el-upload__text">Drop file here or <em>click to upload</em></div>
             </el-upload>
           </div>
         </el-card>
