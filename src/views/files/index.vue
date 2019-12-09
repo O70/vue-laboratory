@@ -39,10 +39,6 @@
         <el-card>
           <div slot="header">
             <b>One-time upload</b>
-            <el-button
-              style="float: right; padding: 3px 0"
-              type="text"
-              @click="submit">Submit</el-button>
           </div>
           <div>
             <el-upload
@@ -55,6 +51,20 @@
               <i class="el-icon-upload"/>
               <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
             </el-upload>
+
+            <div class="mt-10">
+              <el-select v-model="appName" placeholder="Select...">
+                <el-option
+                  v-for="item in options"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                  size="mini"/>
+              </el-select>
+              <el-button
+                type="primary"
+                @click="submit">Submit</el-button>
+            </div>
           </div>
         </el-card>
       </el-col>
@@ -68,6 +78,8 @@ export default {
   data() {
     return {
       formData: null,
+      appName: null,
+      options: ['user', 'admin', 'order', 'supermarket'],
       table: {
         data: []
       }
@@ -90,7 +102,7 @@ export default {
     submit() {
       this.formData = new FormData()
       this.$refs.upload.submit()
-      this.formData.set('type', 'orders')
+      this.formData.set('app', this.appName)
 
       axios.post('/api/fs/file/multiple', this.formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
@@ -113,5 +125,6 @@ export default {
 </script>
 <style>
   .text-c { text-align: center; }
+  .mt-10 { margin-top: 10px; }
   .mb-20 { margin-bottom: 20px; }
 </style>
