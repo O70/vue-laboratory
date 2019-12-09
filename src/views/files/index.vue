@@ -1,5 +1,22 @@
 <template>
   <div class="app-container">
+    <el-row class="mb-20">
+      <el-col>
+        <el-table
+          :data="table.data"
+          max-height="400"
+          border
+          stripe>
+          <el-table-column prop="name" label="Name"/>
+          <el-table-column prop="contentType" label="Type" width="200"/>
+          <el-table-column prop="suffix" label="Suffix" align="right" width="60"/>
+          <el-table-column prop="size" label="Size" align="right" width="100"/>
+          <el-table-column prop="path" label="Path"/>
+          <el-table-column prop="createBy" label="Creator" align="center" width="120"/>
+          <el-table-column prop="createTime" label="Time" align="center" width="180"/>
+        </el-table>
+      </el-col>
+    </el-row>
     <el-row :gutter="20">
       <el-col :span="12">
         <el-card>
@@ -50,8 +67,17 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      formData: null
+      formData: null,
+      table: {
+        data: []
+      }
     }
+  },
+  created() {
+    axios.get('/api/fs/file').then(({ data }) => {
+      console.log(data)
+      this.table.data = data.data
+    })
   },
   methods: {
     handleSuccess(response, file, list) {
@@ -64,9 +90,9 @@ export default {
     submit() {
       this.formData = new FormData()
       this.$refs.upload.submit()
-      this.formData.set('type', 'image')
+      this.formData.set('type', 'orders')
 
-      axios.post('/api/fs/upload/multiple', this.formData, {
+      axios.post('/api/fs/file/multiple', this.formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       }).then(res => {
         console.log(res)
@@ -87,4 +113,5 @@ export default {
 </script>
 <style>
   .text-c { text-align: center; }
+  .mb-20 { margin-bottom: 20px; }
 </style>
