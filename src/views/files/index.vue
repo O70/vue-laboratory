@@ -148,7 +148,7 @@ export default {
         ? this.$message({ message: 'Select at least two files.', type: 'warning' })
         : download.archive({
           files: this.table.selections,
-          name: 'post下载'
+          name: 'post-download'
         })
     },
     handleDownload({ id, name }) {
