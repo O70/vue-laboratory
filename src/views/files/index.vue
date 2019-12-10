@@ -4,7 +4,7 @@
       <el-col align="right">
         <el-button-group>
           <el-button type="primary" icon="el-icon-upload" @click="drawer = !drawer">Upload</el-button>
-          <el-button type="success" icon="el-icon-download">Archive</el-button>
+          <el-button type="success" icon="el-icon-download" @click="handleArchive">Archive</el-button>
           <el-popconfirm
             title="Are you sure to clear all files?"
             confirm-button-text="Ok"
@@ -115,6 +115,7 @@
 </template>
 <script>
 import axios from 'axios'
+import { download } from '@/api/files'
 
 export default {
   data() {
@@ -123,7 +124,8 @@ export default {
       appName: '',
       options: ['user', 'admin', 'order', 'supermarket'],
       table: {
-        data: []
+        data: [],
+        selections: []
       },
       drawer: false
     }
@@ -139,9 +141,15 @@ export default {
       })
     },
     handleSelectionChange(val) {
-      // TODO: archive
-      console.log(val)
-      console.log(arguments)
+      this.table.selections = val.map(it => { return { id: it.id, name: it.name } })
+    },
+    handleArchive() {
+      this.table.selections.length < 2
+        ? this.$message({ message: 'Select at least two files.', type: 'warning' })
+        : download.archive({
+          files: this.table.selections,
+          name: 'post下载'
+        })
     },
     handleDownload({ id, name }) {
       const newName = `mock-${name}`

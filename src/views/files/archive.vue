@@ -53,16 +53,16 @@ export default {
     const gets = []
     fids.forEach((val, ind) => {
       const m = ind % 2 === 0
-      posts.push({ id: val, fileName: m ? `fileName-post${ind}` : null })
-      gets.push(m ? `${val},fileName-get${ind}` : `${val}`)
+      posts.push({ id: val, name: m ? `name-post${ind}` : null })
+      gets.push(m ? `${val},name-get${ind}` : `${val}`)
 
       // File not found
-      // posts.push({ id: val + '1', fileName: m ? `fileName-post${ind}` : null })
-      // gets.push(m ? `${val + '1'},fileName-get${ind}` : `${val + '1'}`)
+      // posts.push({ id: val + '1', name: m ? `name-post${ind}` : null })
+      // gets.push(m ? `${val + '1'},name-get${ind}` : `${val + '1'}`)
 
       // Params error
-      // posts.push({ id: ' ', fileName: m ? `fileName-post${ind}` : null })
-      // gets.push(m ? `${' '},fileName-get${ind}` : `${' '}`)
+      // posts.push({ id: ' ', name: m ? `name-post${ind}` : null })
+      // gets.push(m ? `${' '},name-get${ind}` : `${' '}`)
     })
     return {
       fids,

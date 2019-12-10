@@ -1,4 +1,5 @@
-import request from '@/utils/request'
+// import request from '@/utils/request'
+import axios from 'axios'
 import qs from 'qs'
 import { Message } from 'element-ui'
 
@@ -11,8 +12,8 @@ const download = {
    * Download archive
    * @param {Object} config
    * @example
-   *          post: [{ id: xx, fileName: xx }, { id: yy, fileName: yy }, ...]
-   *          get: ['id-xx,fileName-xx', 'id-yy,fileName-yy', ...]
+   *          post: [{ id: xx, name: xx }, { id: yy, name: yy }, ...]
+   *          get: ['id-xx,name-xx', 'id-yy,name-yy', ...]
    * @param {Array} config.files
    * @param {string} config.method <post(default) | get>
    * @param {string} config.name Archive name
@@ -23,7 +24,7 @@ const download = {
     const { files = [], method = 'post', name = '', care = false } = config
     return new Promise((resolve, reject) => {
       if (!files || files.length < 1) {
-        (m => care ? reject(m) : msgError(m))('参数为空')
+        (m => care ? reject(m) : msgError(m))('Parameter is empty.')
         return
       }
 
@@ -34,27 +35,28 @@ const download = {
         paramsSerializer: (params) => qs.stringify(params, { indices: false })
       }
 
-      request(Object.assign({
-        url: `/api/fs/file/download/archive/${name}`,
+      axios(Object.assign({
+        // url: `/api/fs/file/download/archive/${name}`,
+        url: `/api/fs/file/archive/${name}`,
         method,
         responseType: 'arraybuffer'
-      }, cfg)).then(res => {
+      }, cfg)).then(({ data }) => {
         try {
           let error = null
           if ('TextDecoder' in window) {
-            const dataView = new DataView(res)
+            const dataView = new DataView(data)
             const decoder = new TextDecoder('utf-8')
             const coder = decoder.decode(dataView)
             error = JSON.parse(coder).message
           } else {
             // IE
-            const str = String.fromCharCode.apply(null, new Uint8Array(res))
+            const str = String.fromCharCode.apply(null, new Uint8Array(data))
             error = decodeURIComponent(escape(JSON.parse(str).message))
           }
 
           care ? reject(error) : msgError(error)
         } catch (e) {
-          const blob = new Blob([res])
+          const blob = new Blob([data])
           const filename = `${name || Date.parse(new Date())}.zip`
           care ? resolve(blob) : (() => {
             if (window.navigator.msSaveOrOpenBlob) {
@@ -62,7 +64,7 @@ const download = {
               navigator.msSaveBlob(blob, filename)
             } else {
               // chrome/firefox
-              const url = window.URL.createObjectURL(new Blob([res]))
+              const url = window.URL.createObjectURL(new Blob([data]))
               const link = document.createElement('a')
               link.style.display = 'none'
               link.href = url
@@ -80,7 +82,7 @@ const download = {
   /**
    * Get href
    * @param {Array} files
-   *        ['id-xx,fileName-xx', 'id-yy,fileName-yy', ...]
+   *        ['id-xx,name-xx', 'id-yy,name-yy', ...]
    * @param {String} name Archive name
    * @return {String}
    */
