@@ -24,7 +24,12 @@
           stripe
           @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55"/>
-          <el-table-column prop="name" label="Name"/>
+          <!--<el-table-column prop="name" label="Name"/>-->
+          <el-table-column label="Name">
+            <template slot-scope="scope">
+              <a :href="`/api/fs/file/download/${scope.row.id}`">{{ scope.row.name }}</a>
+            </template>
+          </el-table-column>
           <el-table-column prop="contentType" label="Type" width="200"/>
           <el-table-column prop="suffix" label="Suffix" align="right" width="60"/>
           <el-table-column prop="size" label="Size" align="right" width="120"/>
@@ -37,7 +42,12 @@
             label="Operations"
             width="100">
             <template slot-scope="scope">
-              <el-button type="success" icon="el-icon-download" circle size="mini"/>
+              <el-button
+                type="success"
+                icon="el-icon-download"
+                circle
+                size="mini"
+                @click="handleDownload(scope.row)"/>
               <el-button
                 type="danger"
                 icon="el-icon-delete"
@@ -132,6 +142,17 @@ export default {
       // TODO: archive
       console.log(val)
       console.log(arguments)
+    },
+    handleDownload({ id, name }) {
+      const newName = `mock-${name}`
+      const link = document.createElement('a')
+      link.style.display = 'none'
+      link.href = `/api/fs/file/download/${id}/${newName}`
+      link.setAttribute('download', newName)
+      document.body.appendChild(link)
+      link.click()
+      URL.revokeObjectURL(link.href)
+      link.remove()
     },
     handleDelete(index, rid) {
       axios.delete(`/api/fs/file/${rid}`).then(({ data }) => {
