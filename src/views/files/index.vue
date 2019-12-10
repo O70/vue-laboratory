@@ -5,7 +5,13 @@
         <el-button-group>
           <el-button type="primary" icon="el-icon-upload" @click="drawer = !drawer">Upload</el-button>
           <el-button type="success" icon="el-icon-download">Archive</el-button>
-          <el-button type="danger" icon="el-icon-delete">Clear</el-button>
+          <el-popconfirm
+            title="Are you sure to clear all files?"
+            confirm-button-text="Ok"
+            cancel-button-text="Cancel"
+            @onConfirm="handleClear">
+            <el-button slot="reference" type="danger" icon="el-icon-delete">Clear</el-button>
+          </el-popconfirm>
         </el-button-group>
       </el-col>
     </el-row>
@@ -15,7 +21,9 @@
           :data="table.data"
           max-height="700"
           border
-          stripe>
+          stripe
+          @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55"/>
           <el-table-column prop="name" label="Name"/>
           <el-table-column prop="contentType" label="Type" width="200"/>
           <el-table-column prop="suffix" label="Suffix" align="right" width="60"/>
@@ -30,7 +38,12 @@
             width="100">
             <template slot-scope="scope">
               <el-button type="success" icon="el-icon-download" circle size="mini"/>
-              <el-button type="danger" icon="el-icon-delete" circle size="mini"/>
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                circle
+                size="mini"
+                @click="handleDelete(scope.$index, scope.row.id)"/>
             </template>
           </el-table-column>
         </el-table>
@@ -97,7 +110,7 @@ export default {
   data() {
     return {
       formData: null,
-      appName: null,
+      appName: '',
       options: ['user', 'admin', 'order', 'supermarket'],
       table: {
         data: []
@@ -113,6 +126,23 @@ export default {
       axios.get('/api/fs/file').then(({ data }) => {
         console.log('success: ', data)
         this.table.data = data.data
+      })
+    },
+    handleSelectionChange(val) {
+      // TODO: archive
+      console.log(val)
+      console.log(arguments)
+    },
+    handleDelete(index, rid) {
+      axios.delete(`/api/fs/file/${rid}`).then(({ data }) => {
+        this.table.data.splice(index, 1)
+        console.log(data)
+      })
+    },
+    handleClear() {
+      axios.delete('/api/fs/file/clear').then(({ data }) => {
+        this.table.data = []
+        console.log(data)
       })
     },
     handleSuccess(response, file, list) {
