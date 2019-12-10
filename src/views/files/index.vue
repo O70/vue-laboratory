@@ -40,8 +40,14 @@
             fixed="right"
             align="center"
             label="Operations"
-            width="100">
+            width="140">
             <template slot-scope="scope">
+              <el-button
+                type="info"
+                icon="el-icon-view"
+                circle
+                size="mini"
+                @click="handleView(scope.row.id)"/>
               <el-button
                 type="success"
                 icon="el-icon-download"
@@ -150,6 +156,9 @@ export default {
           files: this.table.selections,
           name: 'post-download'
         })
+    },
+    handleView(rid) {
+      axios.get(`/api/fs/file/base64/${rid}`).then(({ data }) => console.log('Base64:', data))
     },
     handleDownload({ id, name }) {
       const newName = `mock-${name}`
